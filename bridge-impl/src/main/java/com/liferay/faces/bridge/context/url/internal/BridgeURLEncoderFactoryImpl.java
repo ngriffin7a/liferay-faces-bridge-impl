@@ -11,21 +11,27 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.liferay.faces.bridge.application.view.internal;
-
-import javax.faces.FacesException;
-import javax.faces.FacesWrapper;
-import javax.portlet.MimeResponse;
-import javax.portlet.faces.BridgeWriteBehindResponse;
+package com.liferay.faces.bridge.context.url.internal;
 
 import com.liferay.faces.bridge.config.BridgeConfig;
+import com.liferay.faces.bridge.context.url.BridgeURLEncoder;
+import com.liferay.faces.bridge.context.url.BridgeURLEncoderFactory;
 
 
 /**
  * @author  Neil Griffin
  */
-public abstract class BridgeWriteBehindSupportFactory implements FacesWrapper<BridgeWriteBehindSupportFactory> {
+public class BridgeURLEncoderFactoryImpl extends BridgeURLEncoderFactory {
 
-	public abstract BridgeWriteBehindResponse getBridgeWriteBehindResponse(MimeResponse mimeResponse,
-		BridgeConfig bridgeConfig) throws FacesException;
+	@Override
+	public BridgeURLEncoder getBridgeURLEncoder(BridgeConfig bridgeConfig) {
+		return new BridgeURLEncoderImpl(bridgeConfig);
+	}
+
+	@Override
+	public BridgeURLEncoderFactory getWrapped() {
+
+		// Since this is the factory instance provided by the bridge, it will never wrap another factory.
+		return null;
+	}
 }

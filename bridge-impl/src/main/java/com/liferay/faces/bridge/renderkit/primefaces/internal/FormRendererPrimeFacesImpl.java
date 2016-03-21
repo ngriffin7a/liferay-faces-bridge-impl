@@ -1,21 +1,20 @@
 /**
  * Copyright (c) 2000-2016 Liferay, Inc. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 package com.liferay.faces.bridge.renderkit.primefaces.internal;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,6 +22,7 @@ import javax.faces.application.ViewHandler;
 import javax.faces.component.ActionSource;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.event.ActionListener;
@@ -30,8 +30,10 @@ import javax.faces.render.Renderer;
 import javax.faces.render.RendererWrapper;
 
 import com.liferay.faces.bridge.component.primefaces.internal.PrimeFacesFileUpload;
-import com.liferay.faces.bridge.context.BridgeContext;
+import com.liferay.faces.bridge.config.BridgeConfig;
 import com.liferay.faces.bridge.context.url.BridgeURL;
+import com.liferay.faces.bridge.context.url.BridgeURLEncoder;
+import com.liferay.faces.bridge.context.url.BridgeURLEncoderFactory;
 import com.liferay.faces.bridge.internal.BridgeExt;
 
 
@@ -98,17 +100,26 @@ public class FormRendererPrimeFacesImpl extends RendererWrapper {
 			ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
 			String viewId = facesContext.getViewRoot().getViewId();
 			String facesActionURL = viewHandler.getActionURL(facesContext, viewId);
-			BridgeContext bridgeContext = BridgeContext.getCurrentInstance();
-			BridgeURL partialActionURL = bridgeContext.encodePartialActionURL(facesActionURL);
-			partialActionURL.getParameterMap().remove(BridgeExt.FACES_AJAX_PARAMETER);
+			ExternalContext externalContext = facesContext.getExternalContext();
+			BridgeConfig bridgeConfig = (BridgeConfig) externalContext.getRequestMap().get(BridgeConfig.class
+					.getName());
+			BridgeURLEncoder bridgeURLEncoder = BridgeURLEncoderFactory.getBridgeURLEncoderInstance(bridgeConfig);
 
-			String nonAjaxPartialActionURL = partialActionURL.toString();
-			ResponseWriter responseWriter = facesContext.getResponseWriter();
-			ResponseWriter primeFacesResponseWriter = new ResponseWriterPrimeFacesBodyImpl(responseWriter,
-					nonAjaxPartialActionURL);
-			facesContext.setResponseWriter(primeFacesResponseWriter);
-			super.encodeBegin(facesContext, uiComponent);
-			facesContext.setResponseWriter(responseWriter);
+			try {
+				BridgeURL partialActionURL = bridgeURLEncoder.encodePartialActionURL(facesContext, facesActionURL);
+				partialActionURL.getParameterMap().remove(BridgeExt.FACES_AJAX_PARAMETER);
+
+				String nonAjaxPartialActionURL = partialActionURL.toString();
+				ResponseWriter responseWriter = facesContext.getResponseWriter();
+				ResponseWriter primeFacesResponseWriter = new ResponseWriterPrimeFacesBodyImpl(responseWriter,
+						nonAjaxPartialActionURL);
+				facesContext.setResponseWriter(primeFacesResponseWriter);
+				super.encodeBegin(facesContext, uiComponent);
+				facesContext.setResponseWriter(responseWriter);
+			}
+			catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
 		}
 
 		// Otherwise, delegate encoding to the wrapped renderer.

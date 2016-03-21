@@ -1,17 +1,15 @@
 /**
  * Copyright (c) 2000-2016 Liferay, Inc. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 package com.liferay.faces.bridge.filter.internal;
 
@@ -20,8 +18,12 @@ import java.io.OutputStream;
 
 import javax.portlet.CacheControl;
 import javax.portlet.MimeResponse;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 import javax.portlet.ResourceURL;
+import javax.portlet.filter.PortletResponseWrapper;
+import javax.servlet.ServletResponse;
+import javax.servlet.ServletResponseWrapper;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
@@ -42,50 +44,94 @@ public class HttpServletResponseMimeAdapter extends HttpServletResponseWrapper i
 
 	// Private Data Members
 	private String namespace;
+	private MimeResponse wrappedMimeResponse;
 
 	public HttpServletResponseMimeAdapter(HttpServletResponse httpServletResponse, String namespace) {
 		super(httpServletResponse);
 		this.namespace = namespace;
+		this.wrappedMimeResponse = (MimeResponse) unwrapPortletResponse(this);
 	}
 
 	@Override
 	public void addProperty(Cookie cookie) {
-		throw new UnsupportedOperationException();
+		wrappedMimeResponse.addProperty(cookie);
 	}
 
 	@Override
 	public void addProperty(String key, String value) {
-		throw new UnsupportedOperationException();
+		wrappedMimeResponse.addProperty(key, value);
 	}
 
 	@Override
 	public void addProperty(String key, Element element) {
-		throw new UnsupportedOperationException();
+		wrappedMimeResponse.addProperty(key, element);
 	}
 
 	@Override
 	public PortletURL createActionURL() {
-		throw new UnsupportedOperationException();
+		return wrappedMimeResponse.createActionURL();
 	}
 
 	@Override
 	public Element createElement(String tagName) throws DOMException {
-		throw new UnsupportedOperationException();
+		return wrappedMimeResponse.createElement(tagName);
 	}
 
 	@Override
 	public PortletURL createRenderURL() {
-		throw new UnsupportedOperationException();
+		return wrappedMimeResponse.createRenderURL();
 	}
 
 	@Override
 	public ResourceURL createResourceURL() {
-		throw new UnsupportedOperationException();
+		return wrappedMimeResponse.createResourceURL();
+	}
+
+	protected PortletResponse unwrapPortletResponse(PortletResponse portletResponse) {
+
+		if (portletResponse instanceof ServletResponse) {
+
+			PortletResponse unwrappedServletResponse = unwrapServletResponse((ServletResponse) portletResponse);
+
+			if (unwrappedServletResponse != null) {
+				return unwrappedServletResponse;
+			}
+			else {
+				return portletResponse;
+			}
+		}
+		else if (portletResponse instanceof PortletResponseWrapper) {
+
+			PortletResponseWrapper portletResponseWrapper = (PortletResponseWrapper) portletResponse;
+			portletResponse = portletResponseWrapper.getResponse();
+
+			return unwrapPortletResponse(portletResponse);
+		}
+		else {
+			return portletResponse;
+		}
+	}
+
+	protected PortletResponse unwrapServletResponse(ServletResponse servletResponse) {
+
+		if (servletResponse instanceof ServletResponseWrapper) {
+
+			ServletResponseWrapper servletResponseWrapper = (ServletResponseWrapper) servletResponse;
+			servletResponse = servletResponseWrapper.getResponse();
+
+			return unwrapServletResponse(servletResponse);
+		}
+		else if (servletResponse instanceof PortletResponse) {
+			return (PortletResponse) servletResponse;
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override
 	public CacheControl getCacheControl() {
-		throw new UnsupportedOperationException();
+		return wrappedMimeResponse.getCacheControl();
 	}
 
 	@Override
@@ -95,11 +141,11 @@ public class HttpServletResponseMimeAdapter extends HttpServletResponseWrapper i
 
 	@Override
 	public OutputStream getPortletOutputStream() throws IOException {
-		throw new UnsupportedOperationException();
+		return wrappedMimeResponse.getPortletOutputStream();
 	}
 
 	@Override
 	public void setProperty(String key, String value) {
-		throw new UnsupportedOperationException();
+		wrappedMimeResponse.setProperty(key, value);
 	}
 }

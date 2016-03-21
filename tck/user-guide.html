@@ -1,0 +1,2978 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta name="generator" content="HTML Tidy for Linux (vers 7 December 2008), see www.w3.org" />
+<meta content="text/html; charset=us-ascii" http-equiv="content-type" /><title>Portlet 2.0 Bridge for JavaServer Faces 1.2 TCK User's Guide</title></head>
+<body>
+<h1><a name="Table_of_Contents" id="Table_of_Contents"></a>Table
+of
+Contents</h1>
+<hr style="width: 100%; height: 2px;" />
+<a href="#CopyrightLicense_Notice">Copyright/License
+Notice</a><br />
+<a href="#Preface">Preface</a><br />
+<a href="#Introduction_">Chapter 1: Introduction</a><br />
+<a href="#Procedure_for_Portlet_1.0_Bridge_for">Chapter 2:
+Procedure for Portlet 2.0 Bridge for JavaServer&#8482; Faces
+1.2 Certification</a><br />
+<a href="#Requirements">Chapter 3: Requirements</a><br />
+<a href="#Installation">Chapter 4: Installation</a><br />
+<a href="#TCK_Project_Structure">Chapter 5: TCK Project
+Structure</a><br />
+<a href="#Testing_a_Vendor_Implementation">Chapter 6:
+Testing a
+Vendor Implementation</a><br />
+<a href="#Testing_a_Vendor_Implementation_in_a">Chapter 7:
+Testing
+a Vendor Implementation in a Pluto Environment</a><br />
+<a href="#Verifying_the_Reference_Implementation">Chapter
+8:
+Verifying the Reference Implementation in your
+Environment</a><br />
+<a href="#TCK_Command_Reference">Chapter 9: TCK Command
+Reference</a><br />
+<a href="#Debugging_Test_Problems">Chapter 10: Debugging
+Test
+Problems</a><br />
+<a href="#Frequently_Asked_Questions">Appendix A:
+Frequently Asked
+Questions</a><br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h1><a name="CopyrightLicense_Notice" id="CopyrightLicense_Notice"></a>Copyright/License
+Notice</h1>
+<hr style="width: 100%; height: 2px;" />
+<br />
+<br />
+<br />
+<br />
+Portlet 2.0 Bridge for JavaServer&#8482; Faces 1.2<br />
+Compatibility Kit User&#8217;s Guide<br />
+For Technology Licensees<br />
+Version1.0<br />
+November 2010<br />
+<br />
+Copyright&nbsp;2010 Apache Software Foundation<br />
+<br />
+Licensed under the Apache License, Version 2.0 (the "License"); you
+may not use this file except in compliance with the License. You
+may obtain a copy of the License at<br />
+<br />
+http://www.apache.org/licenses/LICENSE-2.0<br />
+<br />
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.<br />
+<br />
+[<a href="#Table_of_Contents">return to TOC</a>]<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h1><a name="Preface" id="Preface"></a>Preface</h1>
+<hr style="width: 100%; height: 2px;" />
+<br />
+<br />
+<br />
+<br />
+This guide describes how to install, configure, and run the
+Technology Compatibility Kit (TCK) that provides tests for
+the Portlet 2.0 Bridge for JavaServer&#8482; Faces 1.2 (Bridge
+TCK). The Bridge TCK is designed as a portable, configurable
+automated test suite for verifying the compliance of a
+licensee&#8217;s implementation of the Portlet 2.0 Bridge for
+JavaServer&#8482; Faces 1.2 Specification (hereafter referred to as
+a licensee implementation). It may also be used to verify that any
+compatible version of the bridge including the Reference
+Implementation runs correctly in a given JavaEE, Portlet container
+and Faces environment. &nbsp;The Bridge TCK runs as a Maven project
+located under Subversion source control in&nbsp; the Apache MyFaces
+PortletBridge project. &nbsp;It relies on JUnit and Selenium to
+provide the necessary test harness and reporting tools to&nbsp;run
+the test suite.<br />
+<br />
+<h2>Who Should Use This Book</h2>
+This guide is for licensees of Oracle Corporation's Portlet 2.0
+Bridge for JavaServer&#8482; Faces 1.2 technology to assist them in
+running the test suite that verifies compliance of their<br />
+implementation of the Portlet 2.0 Bridge for JavaServer&#8482;
+Faces 1.2 Specification.<br />
+<br />
+<div style="margin-left: 40px;">NOTE All references to
+specific Web
+URLs are given for your convenience in locating the resources
+quickly. These references are always subject to changes that are in
+many cases beyond the control of the authors of this
+guide.<br />
+</div>
+<br />
+<h2>Before You Read This Book</h2>
+Before reading this guide, you should familiarize yourself with the
+Java programming language, Portlet 2.0 standard (JSR 286),
+&nbsp;JavaServer Faces 1.2&nbsp;standard (JSR 252)&nbsp;
+and the Portlet 2.0 Bridge for JavaServer&#8482; Faces 1.2 Specification (
+JSR 329). The Bridge TCK 1.0 is based on the JSR 329 Specification.
+Links to the specification and other product information can be
+found on the Web at: http://www.jcp.org/en/jsr/detail?id=329<br />
+<br />
+<h2>How This Book Is Organized</h2>
+If you are installing and using the Bridge TCK for the first time,
+it is recommended that you read chapters 1, 2, and 3 completely for
+the necessary background information, and then perform the steps
+outlined in chapters 4, 5 or 6, and 7, while referring to chapters
+8, 9, 10, and the appendix as necessary.<br />
+<br />
+Chapter 1, &#8220;<a href="#Introduction_">Introduction</a>,&#8221;
+gives an overview of the principles that apply generally to all
+Technology Compatibility Kits (TCKs) and describes the Bridge TCK.
+It also<br />
+includes a listing of the basic steps needed to get up and running
+with the Bridge TCK.<br />
+<br />
+Chapter 2, &#8220;<a href="#Procedure_for_Portlet_1.0_Bridge_for">Procedure
+for Portlet 2.0
+Bridge for JavaServer<sup>tm</sup> Faces 1.2
+Certification</a>,&#8221; describes the conformance testing
+procedure and testing requirements.<br />
+<br />
+Chapter 3, &#8220;<a href="#Requirements">Requirements</a>,&#8221;
+lists the hardware and software requirements that must be met
+before the Bridge Compatibility Test Suite can be run.<br />
+<br />
+Chapter 4, &#8220;<a href="#Installation">Installation</a>,&#8221;
+explains how to install Bridge TCK on machines that run the
+Solaris, Linux, and Windows XP/2000 operating systems.<br />
+<br />
+Chapter 5, &#8220;<a href="#TCK_Project_Structure">TCK Project
+Structure</a>,&#8221; explains how the TCK is organized in its
+various directories.<br />
+<br />
+Chapter 6, &#8220;<a href="#Testing_a_Vendor_Implementation">Testing
+a Vendor
+Implementation</a>,&#8221; explains how to setup and run test suite
+using your bridge implementation in your non-Pluto based test
+server.<br />
+<br />
+Chapter 7, &#8220;<a href="#Testing_a_Vendor_Implementation_in_a">Testing
+a Vendor
+Implementation in a Pluto Environment</a>,&#8221;&nbsp;explains how
+to setup and run test suite using your bridge implementation in
+a&nbsp;Pluto based test server.<br />
+<br />
+Chapter 8, &#8220;<a href="#Verifying_the_Reference_Implementation">Verifying
+the Reference
+Implementation in your Environment</a>,&#8221;&nbsp;explains how to
+setup and run test suite using bridge reference implementation
+in&nbsp;your non-Pluto based test server<br />
+<br />
+Chapter 9, "<a href="#TCK_Command_Reference">TCK Command
+Reference</a>," lists each of the properties which can be set to
+control the behavior of a particular test run.<br />
+<br />
+Chapter 10, &#8220;<a href="#Debugging_Test_Problems">Debugging
+Test Problems</a>,&#8221; describes several approaches for dealing
+with tests that fail to execute properly.<br />
+<br />
+Appendix A, &#8220;<a href="#Frequently_Asked_Questions">Frequently
+Asked Questions</a>,&#8221; provides answers to frequently asked
+questions.<br />
+<br />
+[<a href="Portlet%201.0%20Bridge%20for%20JavaServer%20Faces%201.2%20TCK%20User%27s%20Guide.html#Table_of_Contents">return
+to TOC</a>]<br />
+<br />
+<h2>Chapter 1 &nbsp;</h2>
+<h1><a name="Introduction_" id="Introduction_"></a>Introduction
+&nbsp;</h1>
+<hr style="width: 100%; height: 2px;" />
+<br />
+<br />
+<br />
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<br />
+This chapter provides an overview of the principles that apply
+generally to all Technology Compatibility Kits (TCKs) and describes
+the Portlet 2.0 Bridge for JavaServer&#8482; Faces 1.2<br />
+Compatibility Kit (Bridge TCK). It also includes a listing of what
+is needed to get up and running with the Bridge TCK.<br />
+<h2>Compatibility Testing</h2>
+Compatibility testing differs from traditional product testing in a
+number of ways. The focus of compatibility testing is to test those
+features and areas of an implementation that are likely to differ
+across&nbsp;implementations. It attempts to ensure that users of
+any given implementation will receive the same results regardless
+of the underlying implementation strategy. Compatibility test
+development for a given feature relies on a complete specification
+and reference implementation for that feature. Compatibility
+testing is not primarily concerned with robustness, performance, or
+ease of use.<br />
+<br />
+<h2>Why Compatibility Testing is Important</h2>
+Java&#8482; platform compatibility is important to different groups
+involved with Java technologies for different reasons:<br />
+<ul>
+<li>Compatibility testing is the means by which Sun
+Microsystems
+ensures that the Java platform does not become fragmented as it is
+ported to different operating systems and hardware
+environments.</li>
+<li>Compatibility testing benefits developers working in the
+Java
+programming language, allowing them to write applications once and
+then to deploy them across heterogeneous computing environments
+without porting.</li>
+<li>Compatibility testing allows application users to obtain
+applications from disparate sources and deploy them with
+confidence.</li>
+<li>Compatibility testing benefits Java platform implementors
+by
+ensuring a level playing field for all Java platform ports.</li>
+</ul>
+<h2>TCK Compatibility Rules</h2>
+Compatibility criteria for all technology implementations are
+embodied in the TCK Compatibility Rules that apply to a specified
+technology. Each TCK tests for adherence to these Rules as
+described in Chapter 2, &#8220;Procedure for Portlet 2.0 Bridge for
+JavaServer&#8482; Faces 1.2 Certification.&#8221;<br />
+<br />
+<h2>TCK Overview</h2>
+A TCK is a set of tools and tests used to verify that a
+licensee&#8217;s implementation of Oracle Corporation's&nbsp; Portlet 2.0
+Bridge for JavaServer&#8482; Faces 1.2 technology
+conforms to the applicable<br />
+specification. All tests in the TCK are based on the written
+specifications for the Java platform. Compatibility testing is a
+means of ensuring correctness, completeness, and consistency across
+all implementations. The set of tests included with each TCK is
+called the &#8220;test suite.&#8221; All tests in the Bridge
+TCK&#8217;s test suite are self-checking and do not require tester
+interaction. Most<br />
+tests return either a Pass or Fail status. For a given
+licensee&#8217;s implementation to be certified, all of the
+required tests must pass. The definition of required tests will
+change over time. Before your final<br />
+certification test pass, be sure to download the latest Excludes
+File for the TCK you are using from the TCK site
+(http://wiki.apache.org/myfaces/PortletBridge).<br />
+<br />
+<h2>Java Community Process (JCP) Program and Compatibility
+Testing</h2>
+The Java Community Process(SM) (JCP(SM)) program is the
+formalization of the open process that Sun Microsystems, Inc. has
+been using since 1995 to develop and<br />
+revise Java technology specifications in cooperation with the
+international Java community. The JCP program specifies that the
+following three major components must be included as deliverables
+in a final Java technology release under the direction of the
+responsible Expert Group:<br />
+<ul>
+<li>Technology Specification</li>
+<li>Reference Implementation</li>
+<li>Technology Compatibility Kit (TCK)</li>
+</ul>
+For further information on the JCP program see this URL:
+http://www.jcp.org.<br />
+<br />
+<h2>The Bridge TCK</h2>
+The Bridge TCK 1.0 is designed as a portable, configurable,
+automated test suite for verifying the compliance of a
+licensee&#8217;s implementation with Oracle Corporation's<br />
+Portlet 2.0 Bridge for JavaServer&#8482; Faces 1.2
+specification.<br />
+<br />
+<h2>Bridge TCK Specifications and Requirements</h2>
+This section lists the applicable requirements and
+specifications.<br />
+&#8226; Specification Requirements &#8211; Software requirements
+for a Bridge<br />
+implementation are described in detail in the Portlet 2.0
+Bridge for JavaServer&#8482; Faces 1.2 Specification.<br />
+Links to the JSR 329 specification and other product information
+can be found at http://www.jcp.org/en/jsr/detail?id=329.<br />
+&#8226; Reference Implementation &#8211; The designated Reference
+Implementation for<br />
+conformance testing of implementations based upon JSR 329
+Specification<br />
+is Apache Open Source Project, MyFaces Portlet Bridge 2.0
+(http://myfaces.apache.org/portlet-bridge/2.0/index.html).<br />
+<br />
+<h2>The Bridge TCK</h2>
+The Bridge TCK is composed of :<br />
+<ul>
+<li>a teststuite, which is a collection of tests and
+supplemental
+files that provide data for the automatic running of tests through
+the test harness.</li>
+<li>an exclude list, which provides a list of tests that your
+implementation is not required to pass.</li>
+<li>TCK documentation.</li>
+<li>a set of maven .pom files providing the necessary
+instructions
+for building the test stuite for your test environment and running
+the test harness to verify your environment.</li>
+</ul>
+The Bridge TCK 1.0 is a maven project maintained in Subversion
+source control as part of the Apache MyFaces Portlet Bridge
+project. &nbsp;The TCK test stuite is built and run using maven
+commands. &nbsp;The test harness, used to automate executing the
+TCK tests uses JUnit and Selenium. &nbsp;Maven automatically
+accesses the necessary versions and runs them during the
+appropriate phase of the lifecycle. More information can be found
+on the web:<br />
+<ul>
+<li>Maven: consult the Apache Maven website
+(http://maven.apache.org/).</li>
+<li>Subversion: consult the Apache Subversion website
+(http://subversion.apache.org/).</li>
+<li>JUnit: consult the JUnit website (http://www.junit.org/).</li>
+<li>Selenium: consult the Selenium website
+(http://seleniumhq.org/)</li>
+</ul>
+<br />
+<h3><a name="Typical_Usage" id="Typical_Usage"></a>Typical
+Usage</h3>
+Each TCK test is implemented in its own specific portlet built from
+the test suite source. &nbsp;Most test portlets are grouped into a
+single portlet application. &nbsp;However, because&nbsp;one
+test
+involves varying values in the application's web.xml and another a
+modified face-config.xml, the entire
+test suite is comprised of three portlet applications: &nbsp;a main
+testsuite portlet application containing most of the test portlets,
+and an additional testsuite portlet application containing an
+individual test portlet with a distinct (web.xml) configuration and a
+third application that has the test that depends on the modified
+faces-config.xml.
+&nbsp;Each of these test suite portlet applications is built using
+a maven command. &nbsp;As described in detail later, the command
+used to generate the war files includes flexibility for:<br />
+<ul>
+<li>packaging a specific&nbsp;Faces 1.2 implementation type
+and
+version (e.g. Mojarra or MyFaces) into the war. &nbsp;This is used
+in situations where your application server isn't a fully compliant
+JavaEE 5 server (i.e. one that includes&nbsp;Faces 1.2)</li>
+<li>packaging your bridge implementaion into the war.
+&nbsp;This is
+used if your bridge isn't already deployed for use in the
+application server as part of the portal/portlet container
+deployment.</li>
+<li>including a proper deployment descriptor for deploying the
+applications in a Pluto 2.0 environment.</li>
+</ul>
+Once generated, the testsuite wars are deployed to the host
+application server. &nbsp;The test server(s) must not only contain
+a Portlet 2.0 (compatible) container to host the portlet
+application but must also include a technology for accessing and
+executing each portlet in these applications by URL.
+&nbsp;Typically, this involves a portal application hosting a set
+of portal pages where each page contains a distinct test
+portlet.<br />
+<br />
+<div style="margin-left: 40px;">Note: &nbsp;The test
+harness
+requires a distinct URL to execute each test. &nbsp;In most cases
+this translates into placing each test portlet on a distinct
+page.</div>
+<br />
+Once the test applications are deployed and made accesible by URL,
+the TCK is executed by running a second maven command. &nbsp;This
+command reads a test file containing the test URLs (provided by
+you) and executes each test in the file via the JUnit/Selenium
+harness. &nbsp;Upon completion a report is generated providing
+summary and detailed information of the test results.<br />
+<br />
+<div style="margin-left: 40px;">Note: &nbsp;Prior to
+running the
+automated test harness you are encouraged to verify your
+portal/test suite configuration by invoking some of the test pages
+directly from a browser. &nbsp;Thes tests are designed to ouput
+valid HTML indicating the test status along with the internal tags
+used by the harness.</div>
+<h3>TCK Compatibility Test Suite</h3>
+The test suite is the collection of tests used by the test harness
+to test the compliance of a given Bridge in a given runtime
+environment. The tests are designed to verify that a
+licensee&#8217;s implementation of the technology complies with the
+appropriate specification. The individual tests correspond to
+assertions of the specification. The descriptions of tests that
+make up the TCK compatibility test suite are<br />
+included in the projects root directory in a file called "TCK
+Tests.html".<br />
+<br />
+The Bridge TCK 1.0 test suite comprises two test categories:<br />
+<ul>
+<li>A signature test that checks that&nbsp;the public APIs
+are
+supported in the implementation that is being tested.</li>
+<li>Functional tests that check for behavior correctness for
+all
+the (testable) assertations in the specification .</li>
+</ul>
+<h3>Exclude Lists</h3>
+Each version of a TCK includes an Exclude List file. This file
+identifies tests which do not have to be run as their results may
+not be repeatable in all environments. Whenever tests are run, the
+test harness automatically excludes any test on the Exclude List
+from being executed.<br />
+<br />
+A licensee is not required to pass any test&#8212;or even run any
+test&#8212;on the Exclude List. &nbsp;However, as many of these
+tests are excluded because of specific environmental limitations,
+licensee's are encouraged to review the comments in the excluded
+file to determine if the test can be successfully run in he or her
+environment, and if so, to include the test to verify proper
+behavior.<br />
+<br />
+<br />
+<div style="margin-left: 40px;">Note: Licensees are not
+permitted
+to alter or modify the Exclude Lists. &nbsp;Changes to an Exclude
+List can only be made by using the procedure described in
+&#8220;Portlet Test Appeals Process&#8221;.<br />
+</div>
+<br />
+<h2>Bridge TCK&#8212;Getting Started</h2>
+This section provides a general overview of what needs to be done
+to install, set up, test, and use the Bridge TCK:<br />
+<ol>
+<li>Make sure that the following software has been correctly
+installed:<br />
+<ul>
+<li>Sun Microsystems JDK software version 1.5.x&nbsp;
+on the system
+you are accessing the TCK subversion repository from and from which
+you will build the tests and run the harness.</li>
+<li>The latest version of Subversion
+(http://subversion.apache.org/packages.html). &nbsp;If you are
+running on Windows you may prefer to use the tortoiseSVN subversion
+window shell (http://tortoisesvn.net/downloads)</li>
+<li>The latest version of Maven
+(http://maven.apache.org/download.html)</li>
+<li>An application server containing a portal/Java Portlet
+2.0
+(compatible) portlet container.<br />
+</li>
+</ul>
+Note: Consult the documentation for each of these software
+applications for installation instructions.<br />
+</li>
+<li>Install the&nbsp; TCK 1.0 software. &nbsp;<br />
+<ul>
+<li>Create a directory to contain the TCK project</li>
+<li>Use the subversion checkout command to checkout the TCK
+from&nbsp; <a href="http://svn.apache.org/repos/asf/myfaces/portlet-bridge/tck/tags/jsr329-1.0.0"><font size="3">
+http://svn.apache.org/repos/asf/myfaces/portlet-bridge/tck/tags/jsr329-1.0.0</font></a>.</li>
+</ul>
+</li>
+<li>Build the TCK portlet applications using Maven.</li>
+<li>Deploy the generated applications to your application
+server.</li>
+<li>Construct individual test pages, one for each test, using
+the
+installed portal.</li>
+<li>Verify the test pages/tests by manually accessing a few
+pages.</li>
+<li>Generate a test.xml test file containing the URLs used to
+access each test.</li>
+<li>(Optionally) generate a login.properties file containing
+the
+authentication name/password the harness passes to the portal when
+challenged.</li>
+<li>Run the TCK test harness by issuing the appropriate maven
+command.</li>
+<li>Review the results.</li>
+<li>Debug problems, fix and retry above until all tests pass.</li>
+</ol>
+[<a href="Portlet%201.0%20Bridge%20for%20JavaServer%20Faces%201.2%20TCK%20User%27s%20Guide.html#Table_of_Contents">return
+to TOC</a>]<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h2>Chapter 2</h2>
+<h1><a name="Procedure_for_Portlet_1.0_Bridge_for" id="Procedure_for_Portlet_1.0_Bridge_for"></a>Procedure
+for Portlet 2.0 Bridge for JavaServer&#8482; Faces 1.2
+Certification</h1>
+<hr style="width: 100%; height: 2px;" />
+<br />
+<br />
+<br />
+<br />
+This chapter describes the compatibility testing procedure and
+compatibility requirements for Portlet 2.0 Bridge for
+JavaServer&#8482; Faces 1.2 certification.<br />
+<br />
+<h3>Certification Overview</h3>
+<ul>
+<li>Install the appropriate version of the Technology
+Compatibility
+Kit (TCK) and execute it in accordance with the instructions in
+this User&#8217;s Guide.</li>
+<li>Ensure that you meet the requirements outlined in
+&#8220;Compatibility Requirements&#8221; below.</li>
+<li>Certify to Java Partner Engineering that you have finished
+testing and that you meet all the compatibility requirements.</li>
+</ul>
+<h3>Compatibility Requirements</h3>
+<h4>Definitions</h4>
+These definitions are for use only with these compatibility
+requirements and are not intended for any other purpose.<br />
+<br />
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Term</td>
+<td>Definition</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Computational
+Resource</td>
+<td>A piece of hardware or software that may vary in
+quantity,
+existence, or version, which may be required to exist in a minimum
+quantity and/or at a specific or minimum revision level so as to
+satisfy the requirements of the Test Suite. Examples of
+computational resources that may vary in quantity are RAM and file
+descriptors. Examples of computational resources that may vary in
+existence (this is, may exist or not) are graphics cards and device
+drivers. Examples of computational resources that may vary in
+version are operating systems and device drivers.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Conformance
+Tests</td>
+<td>All tests in the Test Suite for an indicated Technology
+Under
+Test, as distributed by the Maintenance Lead, excluding those tests
+on the Exclude List for the Technology Under Test.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">
+Container</td>
+<td>An implementation of the associated Libraries, as
+specified in
+the Specifications, and a version of a J2SE Runtime Product, as
+specified in the Specifications, or a later version of a J2SE
+Runtime Product that also meets these compatibility
+requirements.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">
+Documented</td>
+<td>Made technically accessible and made known to users,
+typically
+by means such as marketing materials, product documentation, usage
+messages, or developer support programs.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Exclude
+List</td>
+<td>&nbsp;The most current list of tests, distributed
+by the
+Maintenance Lead, that are not required to be passed to certify
+conformance. The Maintenance Lead may add to the Exclude List for
+that Test Suite as needed at any time, in which case the updated
+Exclude List supplants any previous Exclude Lists for that Test
+Suite.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">
+Libraries</td>
+<td>The class libraries, as specified through the Java
+Community
+Process<sup>SM</sup> (JCP<sup>SM</sup>), for
+the Technology Under
+Test.<br />
+<br />
+The Libraries for Portlet 2.0 Bridge are listed at the end of this
+chapter.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Location
+Resource</td>
+<td>A location of classes or native libraries that are
+components
+of the test tools or tests, such that these classes or libraries
+may be required to exist in a certain location in order to satisfy
+the requirements of the test suite. For example, classes may be
+required to exist in directories named in a CLASSPATH variable, or
+native libraries may be required to exist in directories named in a
+PATH variable.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Maintenance
+Lead</td>
+<td>The JCP member responsible for maintaining the
+Specification,
+reference implementation, and TCK for the Technology. Oracle
+Corportation is the Maintenance Leads for Portlet&nbsp;Bridge 2.0.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Operating
+Mode</td>
+<td>Any Documented option of a Product that can be changed
+by a
+user in order to modify the behavior of the Product. For example,
+an Operating Mode of a Runtime can be binary (enable/disable
+optimization), an enumeration (select from a list of
+localizations), or a range (set the initial Runtime heap
+size).&nbsp;&nbsp;</td>
+</tr>
+<tr>
+<td>Product</td>
+<td>A licensee product in which the Technology Under Test
+is
+implemented or incorporated, and that is subject to compatibility
+testing.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Product
+Configuration</td>
+<td>A specific setting or instantiation of an Operating
+Mode.<br />
+<br />
+For example, a Runtime supporting an Operating Mode that permits
+selection of an initial heap size might have a Product
+Configuration that sets the initial heap size to 1 Mb.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Resource</td>
+<td>A Computational Resource, a Location Resource, or a
+Security
+Resource.&nbsp;&nbsp;</td>
+</tr>
+<tr>
+<td>Rules</td>
+<td>These definitions and rules in this Compatibility
+Requirements
+section of this User&#8217;s Guide.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Runtime</td>
+<td>The Containers specified in the Specifications.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Security
+Resource</td>
+<td>A security privilege or policy necessary for the proper
+execution of the Test Suite.<br />
+<br />
+For example, the user executing the Test Suite will need the
+privilege to access the files and network resources necessary for
+use of the Product.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">
+Specifications</td>
+<td>The documents produced through the JCP that define a
+particular
+Version of a Technology.<br />
+<br />
+The Specifications for the Technology Under Test can be found later
+in this chapter.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">
+Technology</td>
+<td>Specifications and a reference implementation produced
+through
+the JCP.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Technology
+Under Test</td>
+<td>Specifications and the reference implementation for
+Portlet 2.0.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Test
+Suite</td>
+<td>The requirements, tests, and testing tools distributed
+by the
+Maintenance Lead as applicable to a given Version of the
+Technology.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">Version</td>
+<td>A release of the Technology, as produced through the
+JCP.</td>
+</tr>
+</tbody>
+</table>
+<br />
+&nbsp;<br />
+<br />
+<h4>&nbsp;Rules for Bridge Products</h4>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">PLT1</td>
+<td style="vertical-align: top;">The Product must be
+able to
+satisfy all applicable compatibility requirements, including
+passing all Conformance Tests, in every Product Configuration and
+in every combination of Product Configurations, except only as
+specifically exempted by these Rules.<br />
+<br />
+For example, if a Product provides distinct Operating Modes to
+optimize performance, then that Product must satisfy all applicable
+compatibility requirements for a Product in each Product
+Configuration, and combination of Product Configurations, of those
+Operating Modes.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">PLT1.1</td>
+<td style="vertical-align: top;">If an Operating
+Mode controls a
+Resource necessary for the basic execution of the Test Suite,
+testing may always use a Product Configuration of that Operating
+Mode providing that Resource, even if other Product Configurations
+do not provide that Resource. Notwithstanding such exceptions, each
+Product must have at least one set of Product Configurations of
+such Operating Modes that is able to pass all the Conformance
+Tests.<br />
+<br />
+For example, a Product with an Operating Mode that controls a
+security policy (i.e., Security Resource) which has one or more
+Product Configurations that cause Conformance Tests to fail may be
+tested using a Product Configuration that allows all Conformance
+Tests to pass.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">PLT1.2</td>
+<td style="vertical-align: top;">A Product
+Configuration of an
+Operating Mode that causes the Product to report only version,
+usage, or diagnostic information is exempted from these
+compatibility rules.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">PLT2</td>
+<td style="vertical-align: top;">Some Conformance
+Tests may have
+properties that may be changed (currently there are no such tests
+in this TCK). Apart from changing such properties and other allowed
+modifications described in this User&#8217;s Guide, no source or
+binary code for a Conformance Test may be altered in any way
+without prior written permission. Any such allowed alterations to
+the Conformance Tests would be posted to the Java Partner
+Engineering web site and apply to all licensees.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">PLT3</td>
+<td style="vertical-align: top;">The testing tools
+supplied as part
+of the Test Suite or as updated by the Maintenance Lead must be
+used to certify compliance.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">PLT4</td>
+<td style="vertical-align: top;">The Exclude List
+associated with
+the Test Suite cannot be modified.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">PLT5</td>
+<td style="vertical-align: top;">The Maintenance
+Lead can define
+exceptions to these Rules. Such exceptions would be made available
+to and apply to all licensees.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">PLT6</td>
+<td style="vertical-align: top;">All hardware and
+software
+component additions, deletions, and modifications to a Documented
+supporting hardware/software platform, that are not part of the
+Product but required for the Product to satisfy the compatibility
+requirements, must be Documented and available to users of the
+Product.<br />
+<br />
+For example, if a patch to a particular version of a supporting
+operating system is required for the Product to pass the
+Conformance Tests, that patch must be Documented and available to
+users of the Product.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">PLT7</td>
+<td style="vertical-align: top;">The Product must
+contain the full
+set of public and protected classes and interfaces for all the
+Libraries. Those classes and interfaces must contain exactly the
+set of public and protected methods, constructors, and fields
+defined in the Specifications for those Libraries. No subsetting,
+supersetting, or modifications of the public and protected API of
+the Libraries are allowed except only as specifically exempted by
+these Rules.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">PLT7.1</td>
+<td style="vertical-align: top;">If a Product
+includes Technologies
+in addition to the Technology Under Test, then it must contain the
+full set of combined public and protected classes and interfaces.
+The API of the Product must contain the union of the included
+Technologies. No further subsetting, supersetting, or modifications
+to the APIs of the included Technologies are allowed.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;">PLT8</td>
+<td style="vertical-align: top;">The functional
+programmatic
+behavior of any binary class or interface must be that defined by
+the Specifications.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<h2>Portlet Test Appeals Process</h2>
+Oracle Corportation has a well established process for managing
+challenges to its Portlet 2.0 Bridge Test Suite and plans to
+continue using a similar process in the future. Oracle Corporation,
+as Maintenance Lead, will authorize representatives from its
+engineering team to be the point of contact for all test
+challenges.<br />
+<br />
+<h3>Process Used to Manage Challenges to Bridge Tests:</h3>
+The following process will be used to manage challenges to Portlet 2.0
+Bridge tests:
+<ol>
+<li>Who can make challenges to the&nbsp; Portlet 2.0 Bridge
+tests?<br />
+<br />
+Anyone, though you must create an Apache JIRA account to submit
+challenges.<br />
+<br />
+</li>
+<li>What challenges to the Portlet 2.0 Bridge tests may be
+submitted?<br />
+<br />
+Individual (or related) tests may be challenged for reasons such
+as:<br />
+<ul>
+<li>Test is buggy (i.e., program logic errors).</li>
+<li>Specification item covered by the test is ambiguous.</li>
+<li>Test does not match the specification.</li>
+<li>Test assumes unreasonable hardware and/or software
+requirements.<br />
+<br />
+</li>
+</ul>
+</li>
+<li>How are challenges submitted?<br />
+<br />
+By filing an Apache JIRA ticket (<a href="https://issues.apache.org/jira/secure/Dashboard.jspa">https://issues.apache.org/jira/secure/Dashboard.jspa</a>).
+<br />
+The
+JIRA form must be filed against the MyFaces Portlet Bridge project.
+&nbsp;The "Issue Type" must be "TCK Challenge". &nbsp;The
+Component
+should be set to "Testing". &nbsp;The&nbsp;"Affects Version"
+should be
+set to to version of the TCK that contains the test being challenged.
+&nbsp;The description field must contain the information in the <a href="#Test_Challenge_Form">form below</a>.<br />
+<br />
+</li>
+<li>How and by whom are challenges addressed?<br />
+<br />
+The Apache committers responsible for the MyFaces Portlet Bridge
+project&nbsp;coordinate the review
+and decisions made by test development and specification
+development engineers.<br />
+<br />
+See the Portlet 2.0 Bridge TCK Test Appeals Steps below.<br />
+<br />
+</li>
+<li>How are approved changes to the Portlet 2.0 Bridge tests
+managed?<br />
+<br />
+All tests found to be invalid are placed on the Exclude List for
+that version of the Portlet 2.0 Bridge TCK within 1 business day.
+The JIRA is updated with all pertinent information including providing
+a description of the change and where/how to acquire it. &nbsp;In
+addition, an announcement is sent to&nbsp;jsr-329-public@jcp.org
+describing the change and where/how to acquire it. <br />
+<br />
+Apache in conjunction with Oracle as Maintenance Lead, has the option
+of creating an
+alternative test to address any challenge. Alternative tests (and
+criteria for their use) will be updated in the SVN source
+repository. Note that passing an alternative test is deemed
+equivalent with passing the original test.</li>
+</ol>
+<h3>Portlet TCK Test Appeals Steps</h3>
+<ol>
+<li>A test challenge is submitted using the Apache JIRA system
+contesting the validity of one or a related set of Portlet
+tests.<br />
+<br />
+A detailed justification for why each test should be invalidated
+must be included with the challenge as described by the Test
+Challenge <a href="#Test_Challenge_Form">form below</a>.<br />
+<br />
+</li>
+<li>The Maintenance Lead evaluates the challenge.<br />
+<br />
+If the appeal is incomplete or unclear, the JIRA is updated request
+further information or correction. If all is in order, the
+Maintenance Lead will check with the test developers to review the
+purpose and validity of the test before writing a response. The
+Maintenance Lead will attempt to complete the response within 5
+business days. If the challenge is similar to a previously rejected
+test challenge (i.e., same test and justification), the Maintenance
+Lead will update the JIRA accordingly.<br />
+<br />
+</li>
+<li>The challenge and any supporting materials from test
+developers
+is sent to the specification engineers for evaluation.<br />
+<br />
+A decision of test validity or invalidity is normally made within
+15 working days of receipt of the challenge. All decisions will be
+documented with an explanation of why test validity was maintained
+or rejected.<br />
+<br />
+</li>
+<li>The licensee is informed of the decision and proceeds
+accordingly.<br />
+<br />
+If the test challenge is approved and one or more tests are
+invalidated, the Maintenance Lead places the tests on the Exclude
+List for that version of the Portlet (effectively removing the
+test(s) from the Test Suite). Details concerning the exlcusion will be
+added into the submitted JIRA challenge in the <a href="#Test_Challenge_Response_Form">form below</a>.
+If the test is valid but difficult to pass due
+to hardware or operating system limitations, the Maintenance Lead
+may choose to provide an alternate test to use in place of the
+original test (all alternate tests are made available to the
+licensee community).<br />
+<br />
+</li>
+<li>If the test challenge is rejected, the licensee may choose
+to
+escalate the decision to the Executive Committee (EC), however, it
+is expected that the licensee would continue to work with the
+Maintenance Lead to resolve the issue and only involve the EC as a
+last resort.</li>
+</ol>
+<br />
+<br />
+<h4><a name="Test_Challenge_Form"></a>Test
+Challenge Form</h4>
+Replace the values in [] with an appropriate response:<br />
+<div style="margin-left: 40px;">[<span style="font-weight: bold;">Test Challenger Name and Company</span>]<br />
+[<span style="font-weight: bold;">Specification Name(s)
+and
+Version(s)</span>]<br />
+[<span style="font-weight: bold;">Test Suite Name and
+Version</span>]<br />
+[<span style="font-weight: bold;">Exclude List
+Version</span>]<br />
+[<span style="font-weight: bold;">Test Name</span>]<br />
+[<span style="font-weight: bold;">Complaint</span>
+(argument for
+why test is invalid)]<br />
+</div>
+<br />
+<br />
+<h4><a name="Test_Challenge_Response_Form"></a>Test
+Challenge Response Form</h4>
+<div style="margin-left: 40px;">[<span style="font-weight: bold;">Test Defender Name and Company</span>]<br />
+[<span style="font-weight: bold;">Test Defender Role in
+Defense</span> (e.g., test developer, Maintenance Lead,
+etc.)]<br />
+[<span style="font-weight: bold;">Specification Name(s)
+and
+Version(s)</span>]<br />
+[<span style="font-weight: bold;">Test Suite Name and
+Version</span>]<br />
+[<span style="font-weight: bold;">Test Name</span>]<br />
+[<span style="font-weight: bold;">Defense</span>
+(argument for why
+test is valid)]<br />
+[<span style="font-weight: bold;">Implications of test
+invalidity</span> (e.g., other affected tests and test framework
+code, creation or exposure of ambiguities in spec (due to
+unspecified requirements), invalidation of the reference
+implementation, creation of serious holes in test suite)]<br />
+[<span style="font-weight: bold;">Alternatives</span>
+(e.g., are
+alternate test appropriate?)]<br />
+</div>
+<br />
+<h2>Reference Implementation for Portlet 2.0 Bridge</h2>
+The Designated Reference Implementation for compatibility testing
+of Portlet 2.0 Bridge&nbsp;is as follows:<br />
+<ul>
+<li>Reference Implementation done as an Apache Open Source
+Project,
+MyFaces PortletBridge 2.0</li>
+<li>Java&#8482; 2 Platform, Standard Edition (J2SE&#8482;) Versions
+1.5.x</li>
+<li>Redhat Linux 7.2, Solaris&#8482; Operating System V 8 and
+9/SPARC, and Microsoft Windows 2000 and XP.<br />
+</li>
+</ul>
+<h2>Specification for Portlet 2.0 Bridge
+for&nbsp;JavaServer<sup>TM</sup> Faces 1.2</h2>
+The following web sites contain the Specifications for Portlet 2.0
+Bridge for JavaServer<sup>TM</sup> Faces 1.2:<br />
+<div style="margin-left: 40px;">
+http://www.jcp.org/en/jsr/detail?id=329<br />
+</div>
+<br />
+<h2>Libraries&nbsp;for Portlet 2.0 Bridge
+for&nbsp;JavaServer<sup>TM</sup> Faces 1.2</h2>
+The following packages constitute the required class libraries for
+Java&#8482; Portlet 2.0 Bridge:<br />
+<ul>
+<li>javax.portlet.faces</li>
+<li>javax.portlet.faces.annotation</li>
+<li>javax.portlet.faces.component</li>
+<li>javax.portlet.faces.event</li>
+<li>javax.portlet.faces.preference</li>
+</ul>
+[<a href="Portlet%201.0%20Bridge%20for%20JavaServer%20Faces%201.2%20TCK%20User%27s%20Guide.html#Table_of_Contents">return
+to TOC</a>]<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h2>Chapter 3</h2>
+<h1><a name="Requirements" id="Requirements"></a>
+Requirements</h1>
+<hr style="width: 100%; height: 2px;" />
+<br />
+<br />
+<br />
+<br />
+This chapter lists the required hardware configurations and
+prerequisite software that must be present before you can run the
+Bridge TCK.<br />
+<br />
+<h2>Hardware Requirements</h2>
+You can run the Portlet TCK software on compatible Java&#8482;
+platforms on both Sun workstations and on personal computers. The
+following section lists the hardware requirements for both the TCK
+and the reference implementation. Hardware requirements for other
+implementations will vary.<br />
+<br />
+All systems must meet the following recommended and minimum
+hardware requirements:<br />
+<ul>
+<li>CPU running at 500 MHz minimum</li>
+<li>512MB of RAM minimum</li>
+<li>1024MB of swap space minimum</li>
+<li>512 MB of free disk space minimum for writing data to log
+files</li>
+<li>Network access</li>
+</ul>
+<br />
+<h2>Software Requirements</h2>
+The Bridge TCK Testharness relies on Selenium Remote Control to
+execute the tests/process the results. &nbsp;Click <a href="http://seleniumhq.org/about/platforms.html#browsers">here
+for the
+specific OS/browser matrix supported by Selenium</a>. In summary,
+you can access run the&nbsp;Bridge TCK software on Sun
+Solaris&#8482; operating system, Linux, and Windows XP/2000
+platforms that meet the following minimum software
+requirements:<br />
+<div style="margin-left: 40px;">Operating Systems:<br />
+<ul>
+<li>Sun Solaris V 8 and 9</li>
+<li>Microsoft Windows 2000 Professional or Microsoft Windows XP
+Pro</li>
+<li>Redhat Linux 7.1</li>
+</ul>
+</div>
+<div style="margin-left: 40px;">Browsers:<br />
+<ul>
+<li>Mozilla Firefox 2/3 (default referenced by the maven
+scripts)</li>
+<li>IE 7/8</li>
+<li>Opera 8/9</li>
+<li>Safari 2/3</li>
+</ul>
+</div>
+<br />
+In addition to build and run the TCK you must have the following
+Java<small><sup>TM</sup></small> software
+installed:<br />
+<ul>
+<li>JavaEE&#8482; 5 Platform, JDK: Version 1.5 (any)</li>
+<li>Vendors application server of choice with the minimum
+requirement that the application server contain a Servlet
+container.</li>
+<li>Java<small><sup>TM</sup></small>
+Portlet 2.0 (compatible)
+platform software, such as a vendor&#8217;s implementation</li>
+<li>JavaServer<small><sup>TM</sup></small>
+Faces 1.2 platform
+software (if not already included in the application server).
+&nbsp;If using Mojarra: Version 1.2_03 or later. &nbsp;If using
+MyFaces: Version 1.2.2 or later</li>
+<li>Java<small><sup>TM</sup></small>
+consumer application which can
+host/expose test portlets in individually addressable URL resources
+(such as a portal)</li>
+</ul>
+Finally, as the TCK is built in run within a local version of the
+Apache project, you will need to install:<br />
+<ul>
+<li>Apache Maven</li>
+<li>Apache Subversion (or equivalent such as TortoiseSVN)</li>
+</ul>
+[<a href="Portlet%201.0%20Bridge%20for%20JavaServer%20Faces%201.2%20TCK%20User%27s%20Guide.html#Table_of_Contents">return
+to TOC</a>]<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h2>Chapter 4</h2>
+<h1><a name="Installation" id="Installation"></a>
+Installation</h1>
+<hr style="width: 100%; height: 2px;" />
+<br />
+<br />
+<br />
+<br />
+This chapter explains how to install the Bridge TCK on a system
+running the Sun Solaris&#8482;, Redhat Linux, or Microsoft Windows
+operating system.<br />
+<br />
+<h2>Obtaining the needed TCK Software</h2>
+Obtain needed software from:<br />
+<ul>
+<li>Apache Maven: <a href="http://maven.apache.org/download.html">http://maven.apache.org/download.html</a></li>
+<li>Apache Subversion: <a href="http://subversion.apache.org/packages.html">http://subversion.apache.org/packages.html</a>&nbsp;or
+TortoiseSVN: <a href="http://tortoisesvn.net/downloads">http://tortoisesvn.net/downloads</a></li>
+<li>Bridge TCK 1.0: Checkout project source using subversion
+from<br />
+<a href="http://svn.apache.org/repos/asf/myfaces/portlet-bridge/tck/tags/jsr329-1.0.0">
+<font size="3">http://svn.apache.org/repos/asf/myfaces/portlet-bridge/tck/tags/jsr329-1.0.0</font></a>&nbsp;</li>
+<li>Bridge 1.0 Reference Implementation (if needed for
+reference/use):<br />
+<a href="http://myfaces.apache.org/portlet-bridge/download.html">http://myfaces.apache.org/portlet-bridge/download.html</a></li>
+</ul>
+<br />
+<br />
+<h2>Installing the Software</h2>
+<ol>
+<li>Install the JavaEE&#8482; 5 Platform, JDK: Version 1.5
+(any)<br />
+Download the&nbsp; JavaEE&#8482; 5 Platform, JDK software from the
+Java Software web site and install. See the installation
+instructions that accompany the software for additional
+information.</li>
+<li>Install Maven</li>
+<li>Install Subversion</li>
+<li>Install an application server. &nbsp;</li>
+<li>Install a Portlet 2.0-compliant portlet container, such as
+the
+reference implementation done as Pluto 2.0 (an Apache Open Source
+Project).<br />
+If the portlet container software doesn't come configured with
+consumer portal software that is used as the application that
+exposes portlets via page (resource) URLs, then also install such
+consumer software.<br />
+<br />
+Verify your installation by creating and accessing a page with a
+portlet on it.</li>
+<li>If the application server you are using isn't a fully
+compliant
+JavaEE server (i.e. it doesn't contain a Faces implementation)
+there is no need to download/install your own version. &nbsp;You
+will be able to leverage Maven when it builds the TCK test suite
+wars to package/bundle the Faces version/impl of your choice
+directly into the war (as long as the version is available in an
+external&nbsp; Maven respository &nbsp;-- which is the case for
+both Mojarra and MyFaces).</li>
+<li>Do a Subversion checkout of the TCK project in a working
+directory of your choice:<br />
+<span style="font-family: monospace; font-weight: bold;">cd
+\myTCK</span><br />
+<span style="font-weight: bold; font-family: monospace;">svn
+checkout&nbsp;</span><font style="font-family: monospace; font-weight: bold;" size="3">http://svn.apache.org/repos/asf/myfaces/portlet-bridge/tck/tags/jsr329-1.0.0</font>&nbsp;</li>
+</ol>
+[<a href="Portlet%201.0%20Bridge%20for%20JavaServer%20Faces%201.2%20TCK%20User%27s%20Guide.html#Table_of_Contents">return
+to TOC</a>]<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h2>Chapter 5</h2>
+<h1><a name="TCK_Project_Structure" id="TCK_Project_Structure"></a>TCK Project Structure</h1>
+<hr style="width: 100%; height: 2px;" />
+<br />
+<br />
+<br />
+<br />
+Once you have successfully checked out the TCK project using
+subversion. You will see the following structure:<br />
+<br />
+<table style="text-align: left; width: 595px; height: 75px;" border="1" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td style="vertical-align: top; white-space: nowrap;"><span style="font-family: monospace;">\Bridge301TCK</span><br style="font-family: monospace;" />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">pom.xml</span><br />
+<span style="font-family: monospace;">Portlet 2.0
+Bridge for
+JavaServer Faces 1.2 TCK User's Guide.html</span><br style="font-family: monospace;" />
+<span style="font-family: monospace;">TCK Tests.html</span><br />
+<span style="font-family: monospace;">tck-generate-test-wars.cmd</span><br style="font-family: monospace;" />
+<span style="font-family: monospace;">tck-run-tests.cmd</span><br />
+<span style="font-family: monospace;">\portlet-bridge-tck-client</span><br style="font-family: monospace;" />
+<span style="font-family: monospace;">\portlet-bridge-tck-main</span><br style="font-family: monospace;" />
+<span style="font-family: monospace;">\portlet-bridge-tck-section3-2-lifecycle-set</span><br style="font-family: monospace;" />
+<span style="font-family: monospace;">\portlet-bridge-tck-section3-2-render-policy-always-delegate</span><br style="font-family: monospace;" />
+<span style="font-family: monospace;">\portlet-bridge-tck-section3-2-render-policy-default</span><br style="font-family: monospace;" />
+<span style="font-family: monospace;">\portlet-bridge-tck-section3-2-render-policy-never-delegate<br />
+</span><span style="font-family: monospace;">\portlet-bridge-tck-section6-2-configured-response-wrapper</span><br style="font-family: monospace;" />
+<span style="font-family: monospace;">\src</span></div>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<span style="font-weight: bold;">\src</span>
+contains all the
+shared sources between the various test apps. &nbsp;This includes
+the tests themselves, plus the non-app specific resource files
+(like the exclusions file which is located in <span style="font-weight: bold;">src\test\resources\test-exclusions.xml</span>).<br />
+<br />
+<span style="font-weight: bold;">\portlet-bridge-tck-main</span>
+holds the main test application. &nbsp;99% of the tests are
+represented within this application.<br />
+<br />
+<span style="font-weight: bold;">\portlet-bridge-tck-section3-2-lifecycle-set</span>
+holds an additional test application. &nbsp;The main test
+application includes a test to verify that when using the default
+configuration the Bridge uses the default Faces Lifecycle.
+&nbsp;This application runs the same test however the web
+application (web.xml) is configured so that Faces/Bridge will use a
+specific Lifecycle implementation.<br />
+<br />
+<span style="font-weight: bold;">\portlet-bridge-tck-section6-2-configured-response-wrapper</span>&nbsp;holds
+an additional test application. &nbsp;&nbsp;This application
+contains a
+portlet that tests that a particular response wrapper configured in the
+application's faces-config.xml is used when the bridge renders the
+portlet. <br />
+<br />
+The three <span style="font-weight: bold;">render-policy</span>
+subdirectories build distinct web applications each of which
+represent the same (render-policy) test but with a distinct
+configuration. &nbsp;However because the render-policy test is an
+excluded test, the TCK will not build or run these test applications
+by default. &nbsp;To manually run these tests, if your environment
+can support them, you will need to execute the tck using the
+"-Pinclude-render-policy-tests" option on the maven command line.
+&nbsp;See the exclusions file in
+src\test\resources\test-exclusions.xml for
+further information.<br />
+<br />
+<span style="font-weight: bold;">\</span><span style="font-weight: bold;">portlet-bridge-tck-</span><span style="font-weight: bold;">client</span>&nbsp;contains
+project
+definitions for using the TCK to generate test definition files and
+for running the TCK against an external server. &nbsp;When you run
+the TCK against an external (non-Jetty) server, the run/results are
+output into the <span style="font-weight: bold;">\</span>portlet-bridge-tck-client\target
+subdirectory.<br />
+<h4>pom.xml</h4>
+The pom.xml file contains the primary Maven definitions for
+building and running the TCK. &nbsp;Though each of the
+subdirectories also contain pom.xml's these are child pom's that
+all rely/reference this one. &nbsp;In general you should not modify
+any of the pom.xml files. &nbsp;The one exception is if you decide
+to customize this root pom.xml by changing its property definitions
+that relate to the particular instance of the Bridge or Faces that
+the TCK relies on/uses by default.<br />
+<br />
+<h4><span style="font-family: monospace; font-weight: bold;">Portlet
+2.0&nbsp;Bridge for
+JavaServer Faces 1.2 TCK User's Guide.html</span></h4>
+This User Manual.<br />
+<br />
+<h4><span style="font-family: monospace; font-weight: bold;">TCK
+Tests.html</span></h4>
+Provides a short description of each test in the TCK.<br />
+<h4>tck-generate-test-wars.cmd</h4>
+The <span style="font-family: monospace;">tck-generate-test-wars.cmd</span>
+file is
+a simple (shell) script that executes the default Maven command for
+generating the test war files modfiied by whatever command line
+arguments you include. &nbsp;Once you figure out your common usage,
+modify this script so you don't have to keep reentering the
+(lengthy) set of arguments.<br />
+<br />
+<h4>tck-run-tests.cmd</h4>
+&nbsp;The <span style="font-family: monospace;">tck-run-tests.cmd</span>
+file is a simple
+(shell) script that executes the default Maven command for running
+the test harness to execute the tests installed in your target test
+application server. &nbsp;To accomplish this test harness will need
+the following information from you:<br />
+<ol>
+<li>location of the file containing the description of the
+tests
+(URLs) to be run.</li>
+<li>location of the file containing authentication/credential
+information (used if the test server's portal challenges the test
+harness).</li>
+<li>The host and port the test server is listening on.</li>
+</ol>
+When using this script, these are preset in environment
+variables:<br />
+<ol>
+<li>TCK_CONFIG_HOME: &nbsp;This variable defines a home
+directory
+containing a test.xml and login.properties file used to configure
+the harness. &nbsp;Use this variable instead of the TCK_TEST_FILE
+and TCK_LOGIN_FILE environment variables if you use the standard
+names.</li>
+<li>TCK_TEST_FILE: This variable defines the path to the file
+containing the URLs for each of the tests to be run in your test
+server. &nbsp;See XXXX for where/how this file is generated.</li>
+<li>TCK_LOGIN_FILE: &nbsp;This variable&nbsp;defines
+the path to
+the file containing the username and password to be used by the
+test harness to authenicate itself when its challenged by the
+portal when it runs the tests.</li>
+<li>TCK_CLIENT_HOST: &nbsp;This variable defines the host
+where the
+test server is located.</li>
+<li>TCK_CLIENT_PORT: This variable defines the port on the hsot
+that the test server is listening on.</li>
+</ol>
+[<a href="Portlet%201.0%20Bridge%20for%20JavaServer%20Faces%201.2%20TCK%20User%27s%20Guide.html#Table_of_Contents">return
+to TOC</a>]<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h2>Chapter 6</h2>
+<h1><a name="Testing_a_Vendor_Implementation" id="Testing_a_Vendor_Implementation"></a>Testing a
+Vendor
+Implementation</h1>
+<hr style="width: 100%; height: 2px;" />
+<br />
+<br />
+<br />
+<br />
+This chapter describes a generic Bridge TCK configuration to work
+with a vendor implementation. See <a href="#Testing_a_Vendor_Implementation_in_a">Chapter 7</a>,
+"Testing a
+Vendor Implementation in a Pluto Environment" if you are testing
+your Bridge implementation using Apache Pluto. &nbsp;See <a href="#Verifying_the_Reference_Implementation">Chapter 8</a>,
+Verifying
+the Reference<br />
+Implementation in Your Environment&#8221; for information on
+running Bridge TCK against the reference implementation
+from&nbsp;Apache MyFaces PortletBridge Project.<br />
+<br />
+Before proceeeding, you may want to review the <a href="#Typical_Usage">typical usage description</a>
+from chapter
+1.<br />
+<br />
+Note: Much of the following relies on Maven commands to build and
+execute the TCK. &nbsp;Maven commands are typically configured by
+using command line arguments. &nbsp;As you will see this can often
+get unwieldly. &nbsp;It is recommended that you either create
+templates for your often used commands, (shell) script
+files,&nbsp;modify the property definitions in the pom.xml file in
+the project's root directory directly, or use profiles to define
+groups of properties.&nbsp; <a class="moz-txt-link-freetext" href="http://maven.apache.org/guides/introduction/introduction-to-profiles.html">
+http://maven.apache.org/guides/introduction/introduction-to-profiles.html</a>.<br />
+<br />
+<h3>Publish your Bridge to the (local) Maven repository</h3>
+Because the TCK is controlled by running Maven, prior to building
+and running the Bridge TCK you need to have published your Bridge
+implementation to a maven repository. &nbsp;If the one you want to
+test isn't already in an (accessible) external repository, then you
+need to publish it to your local repository. &nbsp;It is assumed
+your bridge implementation is contained in two jars, one containing
+the required implementations for the public/specified API
+interfaces and classes corresponding to the JavaDoc included with
+the specification and one containing your vendor specific bridge
+implementation. Both jars are published using&nbsp;the following
+Maven commands:<br />
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;<span style="font-family: monospace;">mvn deploy:deploy-file
+-DgroupId=</span></span><span style="font-family: monospace;">&lt;</span><span style="font-style: italic; font-family: monospace;">your
+bridge
+groupId</span><span style="font-family: monospace;">&gt;</span>
+<span style="font-weight: bold; font-family: monospace;">-DartifactId=</span><span style="font-family: monospace;">&lt;</span><span style="font-style: italic; font-family: monospace;">your
+artifactId for the bridge api</span><span style="font-family: monospace;">&gt; <span style="font-weight: bold;">-Dversion=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">your
+version
+number</span><span style="font-family: monospace;">&gt;
+<span style="font-weight: bold;">-Dpackaging=jar</span>
+<span style="font-weight: bold;">-Dfile=</span>&lt;l</span><span style="font-style: italic; font-family: monospace;">ocation
+of bridge API jar</span><span style="font-family: monospace;">&gt;
+<span style="font-weight: bold;">-Durl=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">local
+file path to
+root of maven repository</span><span style="font-family: monospace;">&gt;</span><br />
+<br />
+<span style="font-family: monospace;"><span style="font-weight: bold;">mvn deploy:deploy-file
+-DgroupId=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">your
+bridge
+groupId</span><span style="font-family: monospace;">&gt;
+<span style="font-weight: bold;">-DartifactId=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">your
+artifactId for
+the bridge impl</span><span style="font-family: monospace;">&gt;
+<span style="font-weight: bold;">-Dversion=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">your
+version
+number</span><span style="font-family: monospace;">&gt;
+<span style="font-weight: bold;">-Dpackaging=jar
+-Dfile=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">location
+of bridge
+Impl jar</span><span style="font-family: monospace;">&gt;
+<span style="font-weight: bold;">-Durl=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">local
+file path to
+root of maven repository</span><span style="font-family: monospace;">&gt;</span></div>
+<br />
+For example: &nbsp;If I wanted to publish Oracle's bridge to my
+local&nbsp;repository using a maven groupid of
+oracle.portlet.bridge I might use:<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn deploy:deploy-file
+-DgroupId=oracle.portlet.bridge -DartifactId=bridge-api
+-Dversion=2.0.0 -Dpackaging=jar
+-Dfile=c:\bridge\oracle\portlet-bridge-api-2.0.0.jar
+-Durl=file://"c:\Documents and
+Settings\myloginname\.m2"</span><br />
+<br />
+<span style="font-family: monospace;">mvn
+deploy:deploy-file
+-DgroupId=oracle.portlet.bridge -DartifactId=bridge-impl
+-Dversion=2.0.0 -Dpackaging=jar
+-Dfile=c:\bridge\oracle\portlet-bridge-impl-2.0.0.jar
+-Durl=file://"c:\Documents and
+Settings\myloginname\.m2"</span></div>
+&nbsp;<br />
+<br />
+<h3>Generate the TCK TestSuite Portlet Applications (.wars)</h3>
+The TCK TestSuite Portlet Application .wars are built using a Maven
+command. &nbsp;Three test applications are built:&nbsp;<font size="3">portlet-bridge-tck-main-jsr329-1.0.0.war</font>
+is generated in
+\portlet-bridge-tck-main\target while
+portlet-bridge-tck-section3-2-lifecycle-set-<font size="3">jsr329-1.0.0</font>.war
+is generated in
+\portlet-bridge-tck-section3-2-lifecycle-set\target and
+portlet-bridge-tck-section6-2-configured-response-wrapper-jsr329<font size="3">-1.0.0</font>.war is generated in
+\portlet-bridge-tck-section6-2-configured-response-wrapper\target.<br />
+<h4>Maven command used when the Bridge and Faces are already
+deployed in the Test AppServer</h4>
+The following command will build the two test war files without
+packaging either the Bridge jars or the Faces jars into these wars.
+&nbsp;(i.e. use this command if the&nbsp;Bridge and Faces
+software
+is already installed/available in your test application
+server.<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;"><span style="font-weight: bold;">mvn
+clean install -Dtck.generate-war
+-Dportlet-bridge.groupId=</span>&lt;<span style="font-style: italic;">your bridge groupId</span>&gt;&nbsp;
+<span style="font-weight: bold;">-Dportlet-bridge.api.artifactId=</span>&lt;<span style="font-style: italic;">your
+artifactId for the bridge api</span>&gt; <span style="font-weight: bold;">-Dportlet-bridge.version=</span>&lt;<span style="font-style: italic;">your
+version number</span>&gt;</span></div>
+<br />
+For example<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn clean install
+-Dtck.generate-war
+-Dportlet-bridge.groupId=</span><span style="font-family: monospace;">oracle.portlet.bridge</span><span style="font-family: monospace;">&nbsp;
+-Dportlet-bridge.api.artifactId=</span><span style="font-family: monospace;">bridge-api</span> <span style="font-family: monospace;">-Dportlet-bridge.version=2.0.0</span></div>
+<br />
+<h4>Maven command which additionally includes the Bridge in
+generated wars.</h4>
+The following command will build the two test war files which will
+include the Bridge jars.<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;"><span style="font-weight: bold;">mvn
+clean install -Dtck.generate-war -DincludeBridge
+-Dportlet-bridge.groupId=</span>&lt;<span style="font-style: italic;">your bridge groupId</span>&gt;&nbsp;
+<span style="font-weight: bold;">-Dportlet-bridge.api.artifactId=</span>&lt;<span style="font-style: italic;">your
+artifactId for the bridge api</span>&gt; </span><span style="font-family: monospace;"><span style="font-weight: bold;">-Dportlet-bridge.impl.artifactId=</span>&lt;<span style="font-style: italic;">your
+artifactId for the bridge <span style="font-family: monospace;">impl&gt;</span></span></span>
+<span style="font-family: monospace;"><span style="font-weight: bold;">-Dportlet-bridge.version=</span>&lt;<span style="font-style: italic;">your
+version number</span>&gt;</span></div>
+<br />
+For example<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn clean install
+-Dtck.generate-war
+-DincludeBridge -Dportlet-bridge.groupId=</span><span style="font-family: monospace;">oracle.portlet.bridge</span><span style="font-family: monospace;">&nbsp;
+-Dportlet-bridge.api.artifactId=</span><span style="font-family: monospace;">bridge-api&nbsp;</span><span style="font-family: monospace;">-Dportlet-bridge.api.artifactId=</span><span style="font-family: monospace;">bridge-impl</span>
+<span style="font-family: monospace;">-Dportlet-bridge.version=2.0.0</span></div>
+<br />
+<br />
+<h4>Maven command which additionally includes JSF in generated
+wars.</h4>
+The following command will build the two test war files including
+both the JSF jars and the Bridge jars.<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;"><span style="font-weight: bold;">mvn
+clean install -Dtck.generate-war -DincludeJSF=[mojarra|myfaces]
+-DincludeBridge -Dportlet-bridge.groupId=</span>&lt;<span style="font-style: italic;">your bridge groupId</span>&gt;&nbsp;
+<span style="font-weight: bold;">-Dportlet-bridge.api.artifactId=</span>&lt;<span style="font-style: italic;">your
+artifactId for the bridge api</span>&gt; </span><span style="font-family: monospace;"><span style="font-weight: bold;">-Dportlet-bridge.impl.artifactId=</span>&lt;<span style="font-style: italic;">your
+artifactId for the bridge <span style="font-family: monospace;">impl&gt;</span></span></span>
+<span style="font-family: monospace;"><span style="font-weight: bold;">-Dportlet-bridge.version=</span>&lt;<span style="font-style: italic;">your
+version number</span>&gt;</span></div>
+<br />
+For example to include the Mojarra JSF jars in your wars:<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn clean install
+-Dtck.generate-war
+-DincludeJSF=mojarra -DincludeBridge
+-Dportlet-bridge.groupId=</span><span style="font-family: monospace;">oracle.portlet.bridge</span><span style="font-family: monospace;">&nbsp;
+-Dportlet-bridge.api.artifactId=</span><span style="font-family: monospace;">bridge-api</span> <span style="font-family: monospace;">-Dportlet-bridge.impl.artifactId=</span><span style="font-family: monospace;">bridge-impl</span>
+<span style="font-family: monospace;">-Dportlet-bridge.version=2.0.0</span></div>
+<br />
+Or to include the MyFaces JSF jars in your wars:<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn clean install
+-Dtck.generate-war
+-DincludeJSF=myfaces -DincludeBridge
+-Dportlet-bridge.groupId=</span><span style="font-family: monospace;">oracle.portlet.bridge</span><span style="font-family: monospace;">&nbsp;
+-Dportlet-bridge.api.artifactId=</span><span style="font-family: monospace;">bridge-api</span> <span style="font-family: monospace;">-Dportlet-bridge.impl.artifactId=</span><span style="font-family: monospace;">bridge-impl</span>
+<span style="font-family: monospace;">-Dportlet-bridge.version=2.0.0</span></div>
+<br />
+Note: &nbsp;Each of the above commands includes the default version
+of either Mojarra or MyFaces in the resulting wars. &nbsp;The
+default version is controlled by the the Maven poroperty
+mojarra.version or myfaces.version. &nbsp;Currently these are the
+minimum versions demanded by the specification: 1.2_03 and 1.2.2,
+respectively. &nbsp;To override these with a later version include
+-Dmojarra.version or -Dmyfaces.version set to the intended version
+in the above command line.<br />
+<br />
+<h3>Configure Test Server</h3>
+<br />
+Once the test applications have been built, deploy them to the test
+server. &nbsp;Once deployed, expose each test via a distinct
+browser accessible URL. &nbsp;I.e. place each portlet on a separate
+portal page. &nbsp;At this point you should be able to verify your
+deployment/setup by running test(s) manually by accessing the
+specific portal pages. &nbsp;<br />
+<br />
+<h3>Run the TestHarness to Execute the TCK</h3>
+The TestHarness runs the TCK by processing a test description file.
+&nbsp;The test description file is an XML file called test.xml.
+&nbsp;It contains one entry for each test the harness is to run.
+&nbsp;The XML syntax for a test description has the form:<br />
+<div style="margin-left: 40px;">
+<pre>&lt;entry key="<span style="font-style: italic;">testURL</span>"&gt;<span style="font-style: italic;">testName</span>&lt;/entry&gt;<br /></pre>
+</div>
+<br />
+where <span style="font-style: italic;">testURL</span>
+is the full
+URL path to the (page containing the) test and <span style="font-style: italic;">testName</span> is the
+short name of the
+test. &nbsp;A test's short name is derived from the test's portlet
+name. &nbsp;A test's portlet name has the form: <span style="font-style: italic;">SpecificationSection</span>-<span style="font-style: italic;">Test(short)Name</span>-portlet.<br />
+<br />
+<h4>Generating the Test Description File</h4>
+Prior to running the TestHarness you will need to
+configure/generate an appropriate version of this test.xml for your
+specific configuration. &nbsp;Though the project contains a
+pre-generated template of the test.xml file
+(src\test\resources\test.xml) its best to generate your own
+template file to ensure absolute consistency with the current
+verion of the TCK. &nbsp;The following command will generate a
+template test.xml.<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-weight: bold;">mvn generate-test-resources
+-Dtck.external-server=generate-test-file-template</span></div>
+<br />
+The command uses a stylesheet included in the TCK src directory to
+transform the portlet.xml for the main Test App into a test.xml
+template (plus its adds the additional test in the other Test app).
+&nbsp;One test.xml entry is created for each portlet in the
+portlet.xml.&nbsp;The resulting test.xml will be located in the
+TCK_PROJECT_HOME
+<span style="font-weight: bold;">/</span>portlet-bridge-tck-client/target/generated-resources/xml/xslt
+and
+contain N test entries&nbsp; in the form &lt;entry
+key="page-servlet-path"&gt;XXXTestname&lt;/entry&gt; where
+XXXTestname varies for each test name that is to be run. &nbsp;To
+transform this template into one that works for your server, merely
+replace the "page-servlet-path" value in each entry with the
+appropriate URL to the page containing the specific test named by
+XXXTestname. &nbsp;For example in a Pluto environment you might end
+up with the following entry:<br />
+<div style="margin-left: 40px;">
+<pre>&lt;entry key="pluto/portal/TestPage001"&gt;bridgeVersionTest&lt;/entry&gt;<br /></pre>
+</div>
+<br />
+Alternatively you can write an xsl script to transform this file
+and specify it as an alternative on the command line:<br />
+<div style="margin-left: 40px;">
+<div style="margin-left: 40px;"><span style="font-weight: bold;">mvn generate-test-resources
+-Dtck.external-server=generate-test-file-template
+-Dbridge.tck.stylesheet=<span style="font-style: italic;">/pathtostylsheet/yoursytlesheet.xsl</span></span></div>
+</div>
+<br />
+Note: because using the above command(s) utilizes Maven, any
+following Maven command that cleans the project (includes
+<span style="font-weight: bold;">clean</span> in its
+command line)
+will delete all the project's <span style="font-weight: bold;">target</span>
+directories including the one
+containing this generated <span style="font-weight: bold;">test.xml</span>
+file. &nbsp;As one commonly
+only needs to generate this file once, after it has been generated
+it is recommended you move this file to a location outside the
+target directory. &nbsp;For example merely move it to <span style="font-weight: bold;">TCK_PROJECT_HOME/</span><span style="font-weight: bold;">portlet-bridge-tck-client.</span><br />
+<h4>Configuring a login file</h4>
+As most portals require user authentication to access pages, in
+addition to configuring a test description file, its (often)
+necessary to also create and configure a <span style="font-weight: bold;">login.properties</span>
+file so the harness
+can properly authenticate itself when challenged. &nbsp;The
+TestHarness, as its running Selenium, handles authentication as it
+does all page requests, it looks for specific named fields/buttons
+in the page response to determine what it should do/send in the
+next request. &nbsp;The <span style="font-weight: bold;">login.properties</span>
+file therefore
+contains the name/value pairs of the form fields and button for the
+portal's login page.&nbsp; I.e. the&nbsp;<span style="font-weight: bold;">login.properties</span>
+file has the
+form:<br />
+<div style="margin-left: 40px;"><span style="font-style: italic;">field1Id</span>=field1Value<br />
+<span style="font-style: italic;">field2Id</span>-field2Value<br />
+<span style="font-style: italic;">SubmitButtonId</span></div>
+<br />
+Note: &nbsp;input fields are donoted as name/value pairs while the
+submit button is represented by only its name (id).<br />
+<br />
+For example the login.properties file for Pluto is:<br />
+<div style="margin-left: 40px;">j_username=pluto<br />
+j_password=pluto<br />
+j_login</div>
+<br />
+In every request sent by the TestHarness the harness looks at the
+response and if the first field from the login.properties file is
+present it sets each of the fields identified in the
+login.properties file with their associated value and submits the
+form (via the indicated submit button).<br />
+<br />
+If your test server will present a login screen to the TestHarness
+when it executes page requests from the <span style="font-weight: bold;">test.xml</span> file,
+create a <span style="font-weight: bold;">login.properties</span>
+file with the
+appropriate information using the above syntax. &nbsp;It is
+recommended you locate this file in the same location as the
+<span style="font-weight: bold;">test.xml</span>
+file.<br />
+<h4>Running the TestHarness</h4>
+After properly configuring and deploying the TCK tests to your test
+server and creating an appropriate <span style="font-weight: bold;">test.xml</span>
+and <span style="font-weight: bold;">login.properites</span>
+(if necessary) file,
+run the TestHarness to execute the tests&nbsp;and generate the test
+reports by using the following command:<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-weight: bold;">mvn&nbsp;</span><tt><span style="font-weight: bold;">surefire-report:report
+-Dtck.external-server=run-test
+-Dbridge.tck.test.file=</span>&lt;<span style="font-style: italic;">path to test.xml</span>&gt;
+<span style="font-weight: bold;">-Dbridge.tck.test.host=</span>&lt;<span style="font-style: italic;">host name</span>&gt; <span style="font-weight: bold;">-Dbridge.tck.test.port=</span>&lt;<span style="font-style: italic;">port</span>&gt; <span style="font-weight: bold;">[-Dbridge.tck.login-file=</span>&lt;<span style="font-style: italic;">path
+to login file</span>&gt;<span style="font-weight: bold;">]</span></tt></div>
+<br />
+<br />
+For example to run the tests and generate the test report in a
+situation where the test server is on the <span style="font-weight: bold;">bridge-testserver</span>
+port <span style="font-weight: bold;">80</span> and
+the test.xml and
+login.properties file both live in the <span style="font-weight: bold;">TCK_HOME/</span><span style="font-weight: bold;">portlet-bridge-tck-client</span>
+directory:<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-weight: bold;">mvn&nbsp;</span><tt><span style="font-weight: bold;">surefire-report:report
+-Dtck.external-server=run-test
+-Dbridge.tck.test.file=</span></tt><span style="font-family: monospace; font-weight: bold;">c:\bridgeTCK\</span><span style="font-family: monospace; font-weight: bold;">portlet-bridge-tck-client\test.xml</span>
+<tt><span style="font-weight: bold;">-Dbridge.tck.test.host=bridge-testserver
+-Dbridge.tck.test.port<span style="font-weight: bold;">=</span></span><span style="font-family: mon; font-weight: bold;">80</span>&nbsp;<span style="font-weight: bold;">-Dbridge.tck.login-file=</span></tt><span style="font-family: monospace; font-weight: bold;">c:\bridgeTCK\</span><span style="font-family: monospace; font-weight: bold;">portlet-bridge-tck-client</span><span style="font-family: monospace; font-weight: bold;">\login.properties</span></div>
+&nbsp;<br />
+<br />
+Note: &nbsp;the default value for bridge.tck.test.host is
+<span style="font-weight: bold;">localhost</span>
+and the default
+value for bridge.tck.test.port is <span style="font-weight: bold;">8080</span>.
+You only need to define these
+properties on the command line if you are not using the
+default(s).<br />
+<br />
+The above command builds the TestHarness client and then executes
+it by launching JUnit and Selenium. &nbsp;Two browser windows will
+be activated. The first runs Selenium Remote Control and the second
+the execution of each test. &nbsp;When the harness completes JUnit
+is used to generate the test reports. &nbsp;The reports are output
+to&nbsp;TCK_HOME/portlet-bridge-tck-client/target/portlet-bridge-tck-client-report.html.
+&nbsp;The raw data from which this report is generated is contained
+in TCK_HOME/portlet-bridge-tck-client/target/surefire-reports<br />
+<br />
+Note: One test, destroyActionTest, can only be run successfully
+once per portlet activation (i.e. the application containing this
+test and/or the server must be bounced before this test can run
+successfully again).<br />
+<br />
+<h4>Alternative to lengthy Maven command lines</h4>
+As Maven doesn't provide a way to pull its properties directly from
+the environment, command lines including the variety of property
+definitions needed to operate the TCK can become quite lengthy.
+&nbsp;Once you determine those commands that satisfy your needs,
+you might consider writing (shell) scripts to make execution
+easier. &nbsp;The TCK_HOME directory contains two .cmd files
+(tck-generate-test-wars.cmd and tck-run-tests.cmd) which you can
+either use directly are alter to better suit your needs.<br />
+<br />
+[<a href="Portlet%201.0%20Bridge%20for%20JavaServer%20Faces%201.2%20TCK%20User%27s%20Guide.html#Table_of_Contents">return
+to TOC</a>]<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h2>Chapter 7</h2>
+<h1><a name="Testing_a_Vendor_Implementation_in_a" id="Testing_a_Vendor_Implementation_in_a"></a>Testing
+a Vendor
+Implementation in a Pluto Environment</h1>
+<hr style="width: 100%; height: 2px;" />
+<br />
+<br />
+<br />
+<br />
+As Apache Pluto is the reference implementation for the Java
+Portlet container, and the Bridge reference implementation is also
+an Apache project, efforts have been made in the TCK to simplify
+testing your vendor implementation running on Pluto. <br />
+<br />
+<h3>Publish your Bridge to the (local) Maven repository</h3>
+Because the TCK is controlled by running Maven, prior to building
+and running the Bridge TCK you need to have published your Bridge
+implementation to a maven repository. &nbsp;If the one you want to
+test isn't already in an (accessible) external repository, then you
+need to publish it to your local repository. &nbsp;It is assumed
+your bridge implementation is contained in two jars, one containing
+the required implementations for the public/specified API
+interfaces and classes corresponding to the JavaDoc included with
+the specification and one containing your vendor specific bridge
+implementation. Both jars are published using&nbsp;the following
+Maven commands:<br />
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;<span style="font-family: monospace;">mvn deploy:deploy-file
+-DgroupId=</span></span><span style="font-family: monospace;">&lt;</span><span style="font-style: italic; font-family: monospace;">your
+bridge
+groupId</span><span style="font-family: monospace;">&gt;</span>
+<span style="font-weight: bold; font-family: monospace;">-DartifactId=</span><span style="font-family: monospace;">&lt;</span><span style="font-style: italic; font-family: monospace;">your
+artifactId for the bridge api</span><span style="font-family: monospace;">&gt; <span style="font-weight: bold;">-Dversion=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">your
+version
+number</span><span style="font-family: monospace;">&gt;
+<span style="font-weight: bold;">-Dpackaging=jar</span>
+<span style="font-weight: bold;">-Dfile=</span>&lt;l</span><span style="font-style: italic; font-family: monospace;">ocation
+of bridge API jar</span><span style="font-family: monospace;">&gt;
+<span style="font-weight: bold;">-Durl=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">local
+file path to
+root of maven repository</span><span style="font-family: monospace;">&gt;</span><br />
+<br />
+<span style="font-family: monospace;"><span style="font-weight: bold;">mvn deploy:deploy-file
+-DgroupId=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">your
+bridge
+groupId</span><span style="font-family: monospace;">&gt;
+<span style="font-weight: bold;">-DartifactId=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">your
+artifactId for
+the bridge impl</span><span style="font-family: monospace;">&gt;
+<span style="font-weight: bold;">-Dversion=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">your
+version
+number</span><span style="font-family: monospace;">&gt;
+<span style="font-weight: bold;">-Dpackaging=jar
+-Dfile=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">location
+of bridge
+Impl jar</span><span style="font-family: monospace;">&gt;
+<span style="font-weight: bold;">-Durl=</span>&lt;</span><span style="font-style: italic; font-family: monospace;">local
+file path to
+root of maven repository</span><span style="font-family: monospace;">&gt;</span></div>
+<br />
+For example: &nbsp;If I wanted to publish Oracle's bridge to my
+local&nbsp;repository using a maven groupid of
+oracle.portlet.bridge I might use:<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn deploy:deploy-file
+-DgroupId=oracle.portlet.bridge -DartifactId=bridge-api
+-Dversion=2.0.0 -Dpackaging=jar
+-Dfile=c:\bridge\oracle\portlet-bridge-api-2.0.0.jar
+-Durl=file://"c:\Documents and
+Settings\myloginname\.m2"</span><br />
+<br />
+<span style="font-family: monospace;">mvn
+deploy:deploy-file
+-DgroupId=oracle.portlet.bridge -DartifactId=bridge-impl
+-Dversion=2.0.0 -Dpackaging=jar
+-Dfile=c:\bridge\oracle\portlet-bridge-impl-2.0.0.jar
+-Durl=file://"c:\Documents and
+Settings\myloginname\.m2"</span></div>
+&nbsp;<br />
+<br />
+<h3><a name="Generate_the_TCK_TestSuite_Portlet" id="Generate_the_TCK_TestSuite_Portlet"></a>Generate
+the TCK TestSuite
+Portlet Applications (.wars)</h3>
+The TCK TestSuite Portlet Application .wars are built using a Maven
+command. &nbsp;Two test applications are built:&nbsp;<font size="3">portlet-bridge-tck-main-jsr329-1.0.0</font>
+is generated in
+\portlet-bridge-tck-main\target while
+portlet-bridge-tck-section3-2-lifecycle-set-<font size="3">jsr329-1.0.0</font>.war
+is generated in
+\portlet-bridge-tck-section3-2-lifecycle-set\target.<br />
+<br />
+Portlet Applications built to be deployed on Pluto require
+additional configuration in the application's web.xml to relate the
+portlets to the Pluto servlet. &nbsp;Using any of the
+following commands will generate Pluto deployable .wars (with
+web.xml's already properly configured).<br />
+<h4>Maven command used when the Bridge and Faces are already
+deployed in the Test AppServer</h4>
+The following command will build the two test war files without
+packaging either the Bridge jars or the Faces jars into these wars.
+&nbsp;(i.e. use this command if the&nbsp;Bridge and Faces
+software
+is already installed/available in your test application
+server.<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;"><span style="font-weight: bold;">mvn
+clean install -Dtck.generate-war=pluto2.0
+-Dportlet-bridge.groupId=</span>&lt;<span style="font-style: italic;">your bridge groupId</span>&gt;&nbsp;
+<span style="font-weight: bold;">-Dportlet-bridge.api.artifactId=</span>&lt;<span style="font-style: italic;">your
+artifactId for the bridge api</span>&gt; <span style="font-weight: bold;">-Dportlet-bridge.version=</span>&lt;<span style="font-style: italic;">your
+version number</span>&gt;</span></div>
+<br />
+For example to build the TCK wars for a Pluto 2.0
+environment:<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn clean install
+-Dtck.generate-war=pluto2.0
+-Dportlet-bridge.groupId=</span><span style="font-family: monospace;">oracle.portlet.bridge</span><span style="font-family: monospace;">&nbsp;
+-Dportlet-bridge.api.artifactId=</span><span style="font-family: monospace;">bridge-api</span> <span style="font-family: monospace;">-Dportlet-bridge.version=2.0.0</span></div>
+<br />
+<h4>Maven command which additionally includes the Bridge in
+generated wars.</h4>
+The following command will build the two test war files including
+the Bridge jars.<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;"><span style="font-weight: bold;">mvn
+clean install -Dtck.generate-war</span></span><span style="font-family: monospace;"><span style="font-weight: bold;">=pluto2.0</span></span>
+<span style="font-family: monospace;"><span style="font-weight: bold;">-DincludeBridge
+-Dportlet-bridge.groupId=</span>&lt;<span style="font-style: italic;">your bridge groupId</span>&gt;&nbsp;
+<span style="font-weight: bold;">-Dportlet-bridge.api.artifactId=</span>&lt;<span style="font-style: italic;">your
+artifactId for the bridge api</span>&gt; </span><span style="font-family: monospace;"><span style="font-weight: bold;">-Dportlet-bridge.impl.artifactId=</span>&lt;<span style="font-style: italic;">your
+artifactId for the bridge <span style="font-family: monospace;">impl&gt;</span></span></span>
+<span style="font-family: monospace;"><span style="font-weight: bold;">-Dportlet-bridge.version=</span>&lt;<span style="font-style: italic;">your
+version number</span>&gt;</span></div>
+<br />
+For example<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn clean install
+-Dtck.generate-war</span><span style="font-family: monospace;">=pluto2.0</span>
+<span style="font-family: monospace;">-DincludeBridge
+-Dportlet-bridge.groupId=</span><span style="font-family: monospace;">oracle.portlet.bridge</span><span style="font-family: monospace;">&nbsp;
+-Dportlet-bridge.api.artifactId=</span><span style="font-family: monospace;">bridge-api</span> <span style="font-family: monospace;">-Dportlet-bridge.impl.artifactId=</span><span style="font-family: monospace;">bridge-impl</span>
+<span style="font-family: monospace;">-Dportlet-bridge.version=2.0.0</span></div>
+<br />
+<br />
+<h4>Maven command which additionally includes JSF in generated
+wars.</h4>
+The following command will build the two test war files including
+both the JSF jars and the Bridge jars.<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;"><span style="font-weight: bold;">mvn
+clean install -Dtck.generate-war</span></span><span style="font-family: monospace;"><span style="font-weight: bold;">=pluto2.0</span></span>
+<span style="font-family: monospace;"><span style="font-weight: bold;">-DincludeJSF=[mojarra|myfaces]
+-DincludeBridge
+-Dportlet-bridge.groupId=</span>&lt;<span style="font-style: italic;">your bridge groupId</span>&gt;&nbsp;
+<span style="font-weight: bold;">-Dportlet-bridge.api.artifactId=</span>&lt;<span style="font-style: italic;">your
+artifactId for the bridge api</span>&gt; </span><span style="font-family: monospace;"><span style="font-weight: bold;">-Dportlet-bridge.impl.artifactId=</span>&lt;<span style="font-style: italic;">your
+artifactId for the bridge <span style="font-family: monospace;">impl&gt;</span></span></span>
+<span style="font-family: monospace;"><span style="font-weight: bold;">-Dportlet-bridge.version=</span>&lt;<span style="font-style: italic;">your
+version number</span>&gt;</span></div>
+<br />
+For example to include the Mojarra JSF jars in your wars:<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn clean install
+-Dtck.generate-war</span><span style="font-family: monospace;">=pluto2.0</span>
+<span style="font-family: monospace;">-DincludeJSF=mojarra
+-DincludeBridge
+-Dportlet-bridge.groupId=</span><span style="font-family: monospace;">oracle.portlet.bridge</span><span style="font-family: monospace;">&nbsp;
+-Dportlet-bridge.api.artifactId=</span><span style="font-family: monospace;">bridge-api</span> <span style="font-family: monospace;">-Dportlet-bridge.impl.artifactId=</span><span style="font-family: monospace;">bridge-impl</span>
+<span style="font-family: monospace;">-Dportlet-bridge.version=2.0.0</span></div>
+<br />
+Or to include the MyFaces JSF jars in your wars:<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn clean install
+-Dtck.generate-war</span><span style="font-family: monospace;">=pluto2.0</span>
+<span style="font-family: monospace;">-DincludeJSF=myfaces
+-DincludeBridge
+-Dportlet-bridge.groupId=</span><span style="font-family: monospace;">oracle.portlet.bridge</span><span style="font-family: monospace;">&nbsp;
+-Dportlet-bridge.api.artifactId=</span><span style="font-family: monospace;">bridge-api</span> <span style="font-family: monospace;">-Dportlet-bridge.impl.artifactId=</span><span style="font-family: monospace;">bridge-impl</span>
+<span style="font-family: monospace;">-Dportlet-bridge.version=2.0.0</span></div>
+<br />
+Note: &nbsp;Each of the above commands includes the default version
+of either Mojarra or MyFaces in the resulting wars. &nbsp;The
+default version is controlled by the the Maven poroperty
+mojarra.version or myfaces.version. &nbsp;Currently these are the
+minimum versions demanded by the specification: 1.2_03 and 1.2.2,
+respectively. &nbsp;To override these with a later version include
+-Dmojarra.version or -Dmyfaces.version set to the intended version
+in the above command line.<br />
+<br />
+<h3>Configure Test Server</h3>
+<br />
+Once the test applications have been built, deploy them to the test
+server. &nbsp;Once deployed, expose each test via a distinct
+browser accessible URL. &nbsp;I.e. place each portlet on a separate
+portal page. &nbsp;At this point you should be able to verify your
+deployment/setup by running test(s) manually by accessing the
+specific portal pages. &nbsp;<br />
+<br />
+To avoid the labor intensive step of manually creating the test
+pages copy
+TCK_HOME/src/test/resources/tomcat_pluto/pluto-portal-driver-config.xml
+to your applications server's deployed Pluto application's WEB-INF
+directory replacing the one that exists there. &nbsp;This file
+maintains Pluto's repository of its portal pages. &nbsp;It has been
+preconfigured to represent/hold all of the tests. Alternatively, you
+can build a new, current version by running the command:<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn generate-test-resources
+-Dtck.external-server=generate-pluto-config</span></div>
+<br />
+The resulting pluto-portal-driver-config.xml file is generated to
+TCK_PROJECT_HOME
+<span style="font-weight: bold;">/</span>portlet-bridge-tck-client/target/generated-resources/xml/xslt.
+<h3>Run the TestHarness to Execute the TCK</h3>
+The TestHarness runs the TCK by processing a test description file.
+&nbsp;The test description file is an XML file called test.xml.
+&nbsp;It contains one entry for each test the harness is to run.
+&nbsp;The XML syntax for a test description has the form:<br />
+<div style="margin-left: 40px;">
+<pre>&lt;entry key="<span style="font-style: italic;">testURL</span>"&gt;<span style="font-style: italic;">testName</span>&lt;/entry&gt;<br /></pre>
+</div>
+<br />
+where <span style="font-style: italic;">testURL</span>
+is the full
+URL path to the (page containing the) test and <span style="font-style: italic;">testName</span> is the
+short name of the
+test. &nbsp;A test's short name is derived from the test's portlet
+name. &nbsp;A test's portlet name has the form: <span style="font-style: italic;">SpecificationSection</span>-<span style="font-style: italic;">Test(short)Name</span>-portlet.<br />
+<br />
+<h4>Generating the Test Description File</h4>
+Normally you would use the commands describes in Chapter 6 for
+generating the test description file. &nbsp;The TCK project however
+contains a preconfigured version for Pluto. &nbsp;This version
+corresponds to the portal structure defined by the
+pluto-portal-driver-config.xml file described in the previous
+section.
+&nbsp;Copy&nbsp;TCK_HOME/src/test/resources/tomcat_pluto/test.xml
+to TCK_HOME/portlet-bridge-tck-client (or merely reference this
+file from this location directly).
+<h4>Configuring a login file</h4>
+Pluto will challenge the caller/client on first access. &nbsp;The
+TestHarness responds to this challenge based on information it
+pulls from the login.properties file. &nbsp;See Chapter 5 for more
+details concerning the structure of this file. &nbsp;However, as
+with the test.xml, the TCK project contains a preconfigured
+login.properties for Pluto.
+&nbsp;Copy&nbsp;TCK_HOME/src/test/resources/tomcat_pluto/login.properties
+to TCK_HOME/portlet-bridge-tck-client (or merely reference this
+file from this location directly).
+<h4>Running the TestHarness</h4>
+After properly configuring and deploying the TCK tests to your test
+server and creating an appropriate <span style="font-weight: bold;">test.xml</span>
+and <span style="font-weight: bold;">login.properites</span>
+(if necessary) file,
+run the TestHarness to execute the tests&nbsp;and generate the test
+reports by using the following command:<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-weight: bold;">mvn&nbsp;</span><tt><span style="font-weight: bold;">surefire-report:report
+-Dtck.external-server=run-test
+-Dbridge.tck.test.file=</span>&lt;<span style="font-style: italic;">path to test.xml</span>&gt;
+<span style="font-weight: bold;">-Dbridge.tck.test.host=</span>&lt;<span style="font-style: italic;">host name</span>&gt; <span style="font-weight: bold;">-Dbridge.tck.test.port=</span>&lt;<span style="font-style: italic;">port</span>&gt; <span style="font-weight: bold;">[-Dbridge.tck.login-file=</span>&lt;<span style="font-style: italic;">path
+to login file</span>&gt;<span style="font-weight: bold;">]</span></tt></div>
+<br />
+<br />
+For example to run the tests and generate the test report in a
+situation where the test server is on the <span style="font-weight: bold;">bridge-testserver</span>
+port <span style="font-weight: bold;">80</span> and
+the test.xml and
+login.properties file both live in the <span style="font-weight: bold;">TCK_HOME/portlet-bridge-tck-client</span>
+directory:<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-weight: bold;">mvn&nbsp;</span><tt><span style="font-weight: bold;">surefire-report:report
+-Dtck.external-server=run-test
+-Dbridge.tck.test.file=</span></tt><span style="font-family: monospace; font-weight: bold;">c:\bridgeTCK\portlet-bridge-tck-client\test.xml</span>
+<tt><span style="font-weight: bold;">-Dbridge.tck.test.host=bridge-testserver
+-Dbridge.tck.test.port<span style="font-weight: bold;">=</span></span><span style="font-family: mon; font-weight: bold;">80</span>&nbsp;<span style="font-weight: bold;">-Dbridge.tck.login-file=</span></tt><span style="font-family: monospace; font-weight: bold;">c:\bridgeTCK\portlet-bridge-tck-client\login.properties</span></div>
+&nbsp;<br />
+<br />
+Note: &nbsp;the default value for bridge.tck.test.host is
+<span style="font-weight: bold;">localhost</span>
+and the default
+value for bridge.tck.test.port is <span style="font-weight: bold;">8080</span>.
+You only need to define these
+properties on the command line if you are not using the
+default(s).<br />
+<br />
+The above command builds the TestHarness client and then executes
+it by launching JUnit and Selenium. &nbsp;Two browser windows will
+be activated. The first runs Selenium Remote Control and the second
+the execution of each test. &nbsp;When the harness completes JUnit
+is used to generate the test reports. &nbsp;The reports are output
+to&nbsp;TCK_HOME/portlet-bridge-tck-client/target/portlet-bridge-tck-client-report.html.
+&nbsp;The raw data from which this report is generated is contained
+in TCK_HOME/portlet-bridge-tck-client/target/surefire-reports<br />
+<br />
+<br />
+<h4>Issues with running the TCK in a Pluto Environment</h4>
+Many TCK tests verify portlet behavior in a JSF environment and
+therefore rely on the underlying portlet container to be providing bug
+free JSR 286 (spec) support. &nbsp;In addition, the JSR 286
+specification gives the portlet container implementor a certain amount
+of leeway in implementing certain features. &nbsp;In the case of
+Pluto, a number of TCK fail though the test itself is correct and has
+been verified on other containers. &nbsp;The bulk of the failures
+relate to the set of event tests listed below. &nbsp;These tests
+only fail when driven from the test harness. &nbsp;When configured
+and run individually or in small groups within the Pluto portal they
+run successfully. &nbsp;The failure is the result of the TCK using
+a common test event in each of the event tests. &nbsp;Though the
+harness expects to run each test on a different page (consumer url),
+because all the pages are configured and Pluto doesn't recognize that
+non-active (visible) portlets don't need to be rendered, the event
+tests fail because the render url that Pluto generates following the
+dispatch of the event includes all the event recipients.
+&nbsp;Because of the number of event tests, the render url runs
+into (Apache) maximum length issues. &nbsp;<br />
+<br />
+This is a list of the event tests that fail when running the TCK via
+the test harness in Pluto:<br />
+<div style="margin-left: 40px;"><a>redirectEventTest
+(177)</a><br />
+<a> </a><a>getResponseContentTypeEventTest (174)</a><br />
+<a> </a><a>getResponseCharacterEncodingEventTest
+(170)</a><br />
+<a> </a><a>eventDestroyTest (007)</a><br />
+<a> </a><a>getRequestContentTypeEventTest (166)</a><br />
+<a> </a><a>getRequestCharacterEncodingEventTest (161)</a><br />
+<a> </a><a>getRequestHeaderValuesMapEventTest</a>
+(147)<br />
+<a>getRequestHeaderMapEventTest (143)</a><br />
+<a> </a><a>encodeActionURLWithInvalidWindowStateEventTest</a><a>
+(114)</a><br />
+<a> </a><a>encodeActionURLWithWindowStateEventTest</a><a>
+(113)</a><br />
+<a> </a><a>encodeActionURLWithInvalidModeEventTest</a><a>
+(112)</a><br />
+<a> </a><a>encodeActionURLWithModeEventTest</a><a>
+(111)</a><br />
+<a> </a><a>encodeActionURLWithParamEventTest</a><a>
+(110)</a><br />
+<a> </a><a>encodeActionURLJSFViewEventTest</a><a>
+(109)</a><br />
+<a> </a><a>portletPhaseRemovedEventTest (067)</a><br />
+<a> </a><a>facesContextReleasedEventTest (066)</a><br />
+<a> </a><a>eventControllerTest</a><a>
+(064)</a><br />
+<a> </a><a>eventScopeNotRestoredModeChangedTest</a><a>
+(063)</a><br />
+<a> </a><a>eventScopeNotRestoredRedirectTest</a>
+(062)<br />
+<a>eventScopeRestoredTest (061)</a><br />
+<a> </a><a>eventPhaseListenerTest</a><a>
+(060)</a><br />
+<a> </a><a>isAutoDispatchEventsNotSetTest</a><a>
+(035)</a><br />
+<a> </a><a>isAutoDispatchEventsSetTest</a><a>
+(034)</a></div>
+<br />
+Its recommended you remove these tests from the test.xml before running
+the harness and then testing them manually by rolling back Pluto to its
+standard (page) configuration and then adding, running, removing each
+portlet one at a time from a test page using the Pluto Admin tab.<br />
+<br />
+There is one test that fails when run in Pluto whether run as part of
+the set via the test harness or run manually because of a bug in Pluto.
+&nbsp;It is <a>setRequestCharacterEncodingActionTest (141) .</a><br />
+<br />
+The destroyXXXTest(s) can only be run successfully
+once per portlet activation (i.e. the application containing this
+test and/or the server must be bounced before this test can run
+successfully again). &nbsp;If you run the test again an error will
+be reported though it will indicate that the prior run was successful.
+&nbsp;<br />
+<br />
+<h4>Alternative to lengthy Maven command lines</h4>
+As Maven doesn't provide a way to pull its properties directly from
+the environment, command lines including the variety of property
+definitions needed to operate the TCK can become quite lengthy.
+&nbsp;Once you determine those commands that satisfy your needs,
+you might consider writing (shell) scripts to make execution
+easier. &nbsp;The TCK_HOME directory contains two .cmd files
+(tck-generate-test-wars.cmd and tck-run-tests.cmd) which you can
+either use directly are alter to better suit your needs.<br />
+<br />
+[<a href="Portlet%201.0%20Bridge%20for%20JavaServer%20Faces%201.2%20TCK%20User%27s%20Guide.html#Table_of_Contents">return
+to TOC</a>]<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h2>Chapter 8</h2>
+<h1><a name="Verifying_the_Reference_Implementation" id="Verifying_the_Reference_Implementation"></a>Verifying
+the
+Reference Implementation in your Environment</h1>
+<hr style="width: 100%; height: 2px;" />
+<br />
+<br />
+<br />
+<br />
+In addition to its main purpose of validating a vendor's Bridge
+implementation, the TCK can also be used to validate an existing
+Bridge implementation in a new application server/JSF/portlet
+container environment. &nbsp;For example one might want to
+check/verify that the Reference Implementation runs correctly in a
+Liferay portal. &nbsp;This chapter describes running the TCK to
+test the Reference Implementation in your application server
+environment.<br />
+<br />
+<h3>Generate the TCK TestSuite Portlet Applications (.wars)</h3>
+The TCK TestSuite Portlet Application .wars are built using a Maven
+command. &nbsp;Two test applications are built:&nbsp;<font size="3">portlet-bridge-tck-main-jsr329-1.0.0</font>
+is generated in
+\portlet-bridge-tck-main\target while
+portlet-bridge-tck-section3-2-lifecycle-set-<font size="3">jsr329-1.0.0</font>.war
+is generated in
+\portlet-bridge-tck-section3-2-lifecycle-set\target.
+<h4>Maven command used when the Bridge and Faces are already
+deployed in the Test AppServer</h4>
+The following command will build the two test war files without
+packaging either the Bridge jars or the Faces jars into these wars.
+&nbsp;(i.e. use this command if the&nbsp;Bridge and Faces
+software
+is already installed/available in your test application
+server.<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;"><span style="font-weight: bold;">mvn
+clean install -Dtck.generate-war</span></span></div>
+<br />
+For example<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn clean install
+-Dtck.generate-war</span></div>
+<br />
+<h4>Maven command which additionally includes the Bridge in
+generated wars.</h4>
+The following command will build the two test war files including
+the Bridge jars.<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;"><span style="font-weight: bold;">mvn
+clean install -Dtck.generate-war
+-DincludeBridge</span></span></div>
+<br />
+For example<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn clean install
+-Dtck.generate-war
+-DincludeBridge</span></div>
+<br />
+<br />
+<h4>Maven command which additionally includes JSF in generated
+wars.</h4>
+The following command will build the two test war files including
+both the JSF jars and the Bridge jars.<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;"><span style="font-weight: bold;">mvn
+clean install -Dtck.generate-war -DincludeJSF=[mojarra|myfaces]
+-DincludeBridge</span></span></div>
+<br />
+For example to include the Mojarra JSF jars in your wars:<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn clean install
+-Dtck.generate-war
+-DincludeJSF=mojarra -DincludeBridge</span></div>
+<br />
+Or to include the MyFaces JSF jars in your wars:<br />
+<div style="margin-left: 40px;"><span style="font-family: monospace;">mvn clean install
+-Dtck.generate-war
+-DincludeJSF=myfaces -DincludeBridge</span></div>
+<br />
+Note: &nbsp;Each of the above commands includes the default version
+of either Mojarra or MyFaces in the resulting wars. &nbsp;The
+default version is controlled by the the Maven poroperty
+mojarra.version or myfaces.version. &nbsp;Currently these are the
+minimum versions demanded by the specification: 1.2_03 and 1.2.2,
+respectively. &nbsp;To override these with a later version include
+-Dmojarra.version or -Dmyfaces.version set to the intended version
+in the above command line.<br />
+<br />
+<h3>Configure Test Server</h3>
+<br />
+Once the test applications have been built, deploy them to the test
+server. &nbsp;Once deployed, expose each test via a distinct
+browser accessible URL. &nbsp;I.e. place each portlet on a separate
+portal page. &nbsp;At this point you should be able to verify your
+deployment/setup by running test(s) manually by accessing the
+specific portal pages. &nbsp;<br />
+<br />
+<h3>Run the TestHarness to Execute the TCK</h3>
+The TestHarness runs the TCK by processing a test description file.
+&nbsp;The test description file is an XML file called test.xml.
+&nbsp;It contains one entry for each test the harness is to run.
+&nbsp;The XML syntax for a test description has the form:<br />
+<div style="margin-left: 40px;">
+<pre>&lt;entry key="<span style="font-style: italic;">testURL</span>"&gt;<span style="font-style: italic;">testName</span>&lt;/entry&gt;<br /></pre>
+</div>
+<br />
+where <span style="font-style: italic;">testURL</span>
+is the full
+URL path to the (page containing the) test and <span style="font-style: italic;">testName</span> is the
+short name of the
+test. &nbsp;A test's short name is derived from the test's portlet
+name. &nbsp;A test's portlet name has the form: <span style="font-style: italic;">SpecificationSection</span>-<span style="font-style: italic;">Test(short)Name</span>-portlet.<br />
+<br />
+<h4>Generating the Test Description File</h4>
+Prior to running the TestHarness you will need to
+configure/generate an appropriate version of this test.xml for your
+specific configuration. &nbsp;Though the project contains a
+pre-generated template of the test.xml file
+(src\test\resources\test.xml) its best to generate your own
+template file to ensure absolute consistency with the current
+verion of the TCK. &nbsp;The following command will generate a
+template test.xml.<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-weight: bold;">mvn generate-test-resources
+-Dtck.external-server=generate-test-file-template</span></div>
+<br />
+The command uses a stylesheet included in the TCK src directory to
+transform the portlet.xml for the main Test App into a test.xml
+template (plus its adds the additional test in teh other Test app).
+&nbsp;One test.xml entry is created for each portlet in the
+portlet.xml.&nbsp;The resulting test.xml will be located in the
+/portlet-bridge-tck-client/target and contain N test entries&nbsp;
+in the form &lt;entry
+key="page-servlet-path"&gt;XXXTestname&lt;/entry&gt; where
+XXXTestname varies for each test name that is to be run. &nbsp;To
+transform this template into one that works for your server, merely
+replace the "page-servlet-path" value in each entry with the
+appropriate URL to the page containing the specific test named by
+XXXTestname. &nbsp;For example in a Pluto environment you might end
+up with the following entry:<br />
+<div style="margin-left: 40px;">
+<pre>&lt;entry key="pluto/portal/TestPage001"&gt;bridgeVersionTest&lt;/entry&gt;<br /></pre>
+</div>
+<br />
+Alternatively you can write an xsl script to transform this file
+and specify it as an alternative on the command line:<br />
+<div style="margin-left: 40px;">
+<div style="margin-left: 40px;"><span style="font-weight: bold;">mvn generate-test-resources
+-Dtck.external-server=generate-test-file-template
+-Dbridge.tck.stylesheet=<span style="font-style: italic;">/pathtostylsheet/yoursytlesheet.xsl</span></span></div>
+</div>
+<br />
+Note: because using the above command(s) utilizes Maven, any
+following Maven command that cleans the project (includes
+<span style="font-weight: bold;">clean</span> in its
+command line)
+will delete all the project's <span style="font-weight: bold;">target</span>
+directories including the one
+containing this generated <span style="font-weight: bold;">test.xml</span>
+file. &nbsp;As one commonly
+only needs to generate this file once, after it has been generated
+it is recommended you move this file to a location outside the
+target directory. &nbsp;For example merely move it to <span style="font-weight: bold;">TCK_PROJECT_HOME/portlet-bridge-tck-client.</span><br />
+<h4>Configuring a login file</h4>
+As most portals require user authentication to access pages, in
+addition to configuring a test description file, its (often)
+necessary to also create and configure a <span style="font-weight: bold;">login.properties</span>
+file so the harness
+can properly authenticate itself when challenged. &nbsp;The
+TestHarness, as its running Selenium, handles authentication as it
+does all page requests, it looks for specific named fields/buttons
+in the page response to determine what it should do/send in the
+next request. &nbsp;The <span style="font-weight: bold;">login.properties</span>
+file therefore
+contains the name/value pairs of the form fields and button for the
+portal's login page.&nbsp; I.e. the&nbsp;<span style="font-weight: bold;">login.properties</span>
+file has the
+form:<br />
+<div style="margin-left: 40px;"><span style="font-style: italic;">field1Id</span>=field1Value<br />
+<span style="font-style: italic;">field2Id</span>-field2Value<br />
+<span style="font-style: italic;">SubmitButtonId</span></div>
+<br />
+Note: &nbsp;input fields are donoted as name/value pairs while the
+submit button is represented by only its name (id).<br />
+<br />
+For example the login.properties file for Pluto is:<br />
+<div style="margin-left: 40px;">j_username=pluto<br />
+j_password=pluto<br />
+j_login</div>
+<br />
+In every request sent by the TestHarness the harness looks at the
+response and if the first field from the login.properties file is
+present it sets each of the fields identified in the
+login.properties file with their associated value and submits the
+form (via the indicated submit button).<br />
+<br />
+If your test server will present a login screen to the TestHarness
+when it executes page requests from the <span style="font-weight: bold;">test.xml</span> file,
+create a <span style="font-weight: bold;">login.properties</span>
+file with the
+appropriate information using the above syntax. &nbsp;It is
+recommended you locate this file in the same location as the
+<span style="font-weight: bold;">test.xml</span>
+file.<br />
+<h4>Running the TestHarness</h4>
+After properly configuring and deploying the TCK tests to your test
+server and creating an appropriate <span style="font-weight: bold;">test.xml</span>
+and <span style="font-weight: bold;">login.properites</span>
+(if necessary) file,
+run the TestHarness to execute the tests&nbsp;and generate the test
+reports by using the following command:<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-weight: bold;">mvn&nbsp;</span><tt><span style="font-weight: bold;">surefire-report:report
+-Dtck.external-server=run-test
+-Dbridge.tck.test.file=</span>&lt;<span style="font-style: italic;">path to test.xml</span>&gt;
+<span style="font-weight: bold;">-Dbridge.tck.test.host=</span>&lt;<span style="font-style: italic;">host name</span>&gt; <span style="font-weight: bold;">-Dbridge.tck.test.port=</span>&lt;<span style="font-style: italic;">port</span>&gt; <span style="font-weight: bold;">[-Dbridge.tck.login-file=</span>&lt;<span style="font-style: italic;">path
+to login file</span>&gt;<span style="font-weight: bold;">]</span></tt></div>
+<br />
+<br />
+For example to run the tests and generate the test report in a
+situation where the test server is on the <span style="font-weight: bold;">bridge-testserver</span>
+port <span style="font-weight: bold;">80</span> and
+the test.xml and
+login.properties file both live in the <span style="font-weight: bold;">TCK_HOME/portlet-bridge-tck-client</span>
+directory:<br />
+<br />
+<div style="margin-left: 40px;"><span style="font-weight: bold;">mvn&nbsp;</span><tt><span style="font-weight: bold;">surefire-report:report
+-Dtck.external-server=run-test
+-Dbridge.tck.test.file=</span></tt><span style="font-family: monospace; font-weight: bold;">c:\bridgeTCK\portlet-bridge-tck-client\test.xml</span>
+<tt><span style="font-weight: bold;">-Dbridge.tck.test.host=bridge-testserver
+-Dbridge.tck.test.port<span style="font-weight: bold;">=</span></span><span style="font-family: mon; font-weight: bold;">80</span>&nbsp;<span style="font-weight: bold;">-Dbridge.tck.login-file=</span></tt><span style="font-family: monospace; font-weight: bold;">c:\bridgeTCK\portlet-bridge-tck-client\login.properties</span></div>
+&nbsp;<br />
+<br />
+Note: &nbsp;the default value for bridge.tck.test.host is
+<span style="font-weight: bold;">localhost</span>
+and the default
+value for bridge.tck.test.port is <span style="font-weight: bold;">8080</span>.
+You only need to define these
+properties on the command line if you are not using the
+default(s).<br />
+<br />
+The above command builds the TestHarness client and then executes
+it by launching JUnit and Selenium. &nbsp;Two browser windows will
+be activated. The first runs Selenium Remote Control and the second
+the execution of each test. &nbsp;When the harness completes JUnit
+is used to generate the test reports. &nbsp;The reports are output
+to&nbsp;TCK_HOME/portlet-bridge-tck-client/target/portlet-bridge-tck-client-report.html.
+&nbsp;The raw data from which this report is generated is contained
+in TCK_HOME/portlet-bridge-tck-client/target/surefire-reports<br />
+<br />
+Note: One test, destroyActionTest, can only be run successfully
+once per portlet activation (i.e. the application containing this
+test and/or the server must be bounced before this test can run
+successfully again).<br />
+<br />
+<h4>Alternative to lengthy Maven command lines</h4>
+As Maven doesn't provide a way to pull its properties directly from
+the environment, command lines including the variety of property
+definitions needed to operate the TCK can become quite lengthy.
+&nbsp;Once you determine those commands that satisfy your needs,
+you might consider writing (shell) scripts to make execution
+easier. &nbsp;The TCK_HOME directory contains two .cmd files
+(tck-generate-test-wars.cmd and tck-run-tests.cmd) which you can
+either use directly are alter to better suit your needs.<br />
+<br />
+[<a href="Portlet%201.0%20Bridge%20for%20JavaServer%20Faces%201.2%20TCK%20User%27s%20Guide.html#Table_of_Contents">return
+to TOC</a>]<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h2>Chapter 9</h2>
+<h1><a name="TCK_Command_Reference" id="TCK_Command_Reference"></a>TCK
+Command&nbsp;Reference</h1>
+<hr style="width: 100%; height: 2px;" />
+<br />
+<br />
+<br />
+<br />
+As has been shown in the previous chapters, the Maven commands used
+to build and run the TCK are highly configurable. Commands are
+driven/modified by setting Maven properties. &nbsp;Maven properties
+are set in the command line using the following syntax:
+<span style="font-family: monospace;">mvn install <span style="font-weight: bold;">-DpropertyName=value</span></span>.&nbsp;
+In
+certain instances the mere existence of a property signifies
+behavior. &nbsp;I.e. It is both valid and there is meaning to
+defining a property without a value. &nbsp;The following is a
+complete reference of the properties recognized in the TCK.
+&nbsp;Properties that have meaning/use without a value are
+indicated in the table as accepting an &lt;<span style="font-style: italic;">emptyValue</span>&gt;.
+&nbsp;Properties that
+require a value to be set and don't have a predefined default value
+use &lt;<span style="font-style: italic;">none</span>&gt;
+in the
+Default Value column.<br />
+<br />
+<h3>The most common properties that pertain to generating the
+Test
+wars (i.e. mvn install):</h3>
+<br />
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td>Property Name</td>
+<td>Default Value</td>
+<td>Allowed Values</td>
+<td>Description</td>
+</tr>
+<tr>
+<td>tck.generate-war</td>
+<td>&lt;<span style="font-style: italic;">emptyValue</span>&gt;</td>
+<td>&lt;<span style="font-style: italic;">emptyValue</span>&gt;|<span style="font-weight: bold;"></span><span style="font-weight: bold;">pluto2.0</span></td>
+<td>This property instructs the Maven command to build and
+generate
+the Test wars. When defined without a value (&lt;<span style="font-style: italic;">emptyValue</span>&gt;)
+the generated wars
+will contain a standard portlet application web.xml. &nbsp;When
+defined with a value of pluto2.0 the generated wars will
+contain a web.xml preconfigured for deployment in a Pluto 2.0
+container.<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn install
+-Dtck.generate-war=pluto2.0</span></td>
+</tr>
+<tr>
+<td>includeBridge</td>
+<td>&lt;<span style="font-style: italic;">emptyValue</span>&gt;</td>
+<td>&lt;<span style="font-style: italic;">emptyValue</span>&gt;</td>
+<td>Setting this property instructs the Maven command to
+include
+the Bridge jars in the generated Test wars. By default this
+property is not set. &nbsp;<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn install
+-Dtck.generate-war -DincludeBridge</span></td>
+</tr>
+<tr>
+<td>includeJSF</td>
+<td>&lt;<span style="font-style: italic;">none</span>&gt;</td>
+<td><span style="font-weight: bold;">mojarra</span>|<span style="font-weight: bold;">myfaces</span></td>
+<td>Setting this property instructs the Maven command to
+include
+the JSF jars in the generated Test wars. When set with a value
+mojarra, the Mojarra (RI) implementation is included. When set with
+a value myffaces, the MyFaces implementation is included. By
+default this property is not set.<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn install
+-Dtck.generate-war -DincludeJSF=myfaces</span></td>
+</tr>
+<tr>
+<td>mojarra.version</td>
+<td><span style="font-weight: bold;">1.2_03</span></td>
+<td>1.2_03 or greater (mojarra)<br />
+</td>
+<td>This property defines the Mojarra version used
+to&nbsp;include
+in the generated Test wars. &nbsp;By default the
+TCK&nbsp;doesn't
+include the JSF jars in its Test wars. (See includeJSF above).
+&nbsp;When used in conjunction with -DincludeJSF=mojarra this
+property is consulted to define the version to include. &nbsp;By
+default (if not set) Mojarra 1.2_03 is used.<br />
+<br />
+Usage <span style="font-weight: bold;">mvn</span> <span style="font-weight: bold;">install -Dtck.generate-war
+-DincludeJSF=mojarra -Dmojarra-version=1.2_09</span></td>
+</tr>
+<tr>
+<td>myfaces.version</td>
+<td><span style="font-weight: bold;">1.2.2</span></td>
+<td>1.2.2 or greater (myfaces)</td>
+<td>This property defines the MyFaces version used
+to&nbsp;include
+in the generated Test wars. &nbsp;By default the
+TCK&nbsp;doesn't
+include the JSF jars in its Test wars. (See includeJSF above).
+&nbsp;When used in conjunction with -DincludeJSF=myfaces this
+property is consulted to define the version to include. &nbsp;By
+default (if not set) yFaces 1.2.2 is used.<br />
+<br />
+Usage <span style="font-weight: bold;">mvn</span> <span style="font-weight: bold;">install -Dtck.generate-war
+-DincludeJSF=myfaces -Dmyfaces-version=1.2.7</span></td>
+</tr>
+<tr>
+<td>portlet-bridge.groupId</td>
+<td><span style="font-style: italic;">Bridge RI</span></td>
+<td></td>
+<td>This property defines the Maven atrifact group the
+bridge lies
+in and is used in part to locate the bridge in the Maven
+respository. &nbsp;By default this property references the
+Reference Implementation. &nbsp;To compile and/or include your
+bridge set this property to reference your bridge.<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn install
+-Dtck.generate-war</span> <span style="font-family: monospace; font-weight: bold;">-Dportlet-bridge.groupId=oracle.portlet.bridge&nbsp;
+-Dportlet-bridge.api.artifactId=bridge-api
+-Dportlet-bridge.version=2.0.0&nbsp;</span></td>
+</tr>
+<tr>
+<td>portlet-bridge.api.artifactId</td>
+<td><span style="font-style: italic;">Bridge RI</span></td>
+<td></td>
+<td>This property defines the Maven atrifact id for the
+portlet
+bridge api jar and is used in part to locate the bridge api jar in
+the Maven respository. &nbsp;By default this property references
+the Reference Implementation. &nbsp;To compile and/or include your
+bridge set this property to reference your bridge.<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn install
+-Dtck.generate-war</span> <span style="font-family: monospace; font-weight: bold;">-Dportlet-bridge.groupId=oracle.portlet.bridge&nbsp;
+-Dportlet-bridge.api.artifactId=bridge-api
+-Dportlet-bridge.version=2.0.0&nbsp;</span></td>
+</tr>
+<tr>
+<td>portlet-bridge.version</td>
+<td><span style="font-style: italic;">Bridge RI</span></td>
+<td></td>
+<td>This property defines the Maven version number for the
+portlet
+bridge api/impl jars and is used in part to locate the bridge
+api/impl jar in the Maven respository. &nbsp;By default this
+property references the Reference Implementation. &nbsp;To compile
+and/or include your bridge set this property to reference your
+bridge version.<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn install
+-Dtck.generate-war</span> <span style="font-family: monospace; font-weight: bold;">-Dportlet-bridge.groupId=oracle.portlet.bridge&nbsp;
+-Dportlet-bridge.api.artifactId=bridge-api
+-Dportlet-bridge.version=2.0.0&nbsp;</span></td>
+</tr>
+<tr>
+<td>portlet-bridge.impl.artifactId</td>
+<td><span style="font-style: italic;">Bridge RI</span></td>
+<td></td>
+<td>This property defines the Maven atrifact id for the
+portlet
+bridge impl jar and is used in part to locate the bridge impl jar
+in the Maven respository. &nbsp;By default this property references
+the Reference Implementation. &nbsp;Typically this property is only
+set when you want to include your bridge in the generate Test
+wars..<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn install
+-Dtck.generate-war</span> <span style="font-family: monospace; font-weight: bold;">-DincludeBridge
+-Dportlet-bridge.groupId=oracle.portlet.bridge&nbsp;
+-Dportlet-bridge.api.artifactId=bridge-api&nbsp;</span><span style="font-family: monospace; font-weight: bold;">-Dportlet-bridge.impl.artifactId=bridge-impl</span>
+<span style="font-family: monospace; font-weight: bold;">-Dportlet-bridge.version=2.0.0&nbsp;</span></td>
+</tr>
+</tbody>
+</table>
+<br />
+Other less commonly set properties exist that aren't covered here.
+&nbsp;In general they provide finer control on the ids/versions
+referenced above. &nbsp;Consult the TCK's root .pom file for more
+information.<br />
+<br />
+<h3>The most common properties that pertain to generating the
+Test
+Description File (i.e. mvn generate-test-resources):</h3>
+<br />
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td>Property Name</td>
+<td>Default Value</td>
+<td>Allowed Values</td>
+<td>Description</td>
+</tr>
+<tr>
+<td>tck.external-server</td>
+<td>&lt;<span style="font-style: italic;">none</span>&gt;</td>
+<td><span style="font-weight: bold;">generate-test-file-template</span></td>
+<td>When this property is set with a value of
+generate-test-file-template it&nbsp;instructs the Maven command to
+only generate the test description file (template) to be used with
+an external server.<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn
+generate-test-resources
+-Dtck.external-server=generate-test-file-template</span></td>
+</tr>
+<tr>
+<td>bridge.tck.test.file.stylesheet</td>
+<td><span style="font-weight: bold;">src/test/resources/test-template.xsl</span><br />
+</td>
+<td><br />
+</td>
+<td>When defined with the above, this property defines the
+location
+of the stylesheet that is used to transform&nbsp;portlet.xml and
+generate a test.xml template<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn&nbsp;</span><span style="font-weight: bold;">generate-test-resources
+-Dtck.external-server=generate-test-file-template
+-Dbridge.tck.test.file.stylesheet=</span><span style="font-family: monospace; font-weight: bold;">c:\bridgeTCK\portlet-bridge-tck-client\generate_test_xml.xsl</span></td>
+</tr>
+<tr>
+<td>bridge.tck.test.file.servlet.path</td>
+<td><span style="font-weight: bold;">page-servlet-path</span><br />
+</td>
+<td>any string<br />
+</td>
+<td>This property defines the string used to represent the
+page
+path in the generated test.xml when the test.xml is built using the
+standard (provided) stylesheet. &nbsp;Change this string to
+something else if its easier for you to manually update the
+template afterwards.<br />
+<br />
+Usage:&nbsp;<span style="font-weight: bold;">mvn&nbsp;</span><span style="font-weight: bold;">generate-test-resources
+-Dtck.external-server=generate-test-file-template
+-Dbridge.tck.tst.file.servlet.path=/pluto/portal/TestPage0000</span></td>
+</tr>
+</tbody>
+</table>
+<br />
+<br />
+<h3>The most common properties that pertain to running the Test
+Harness (i.e. <big><tt><span style="font-weight: bold;">mvn
+surefire-report:report</span></tt></big>):</h3>
+<br />
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td>Property Name</td>
+<td>Default Value</td>
+<td>Allowed Values</td>
+<td>Description</td>
+</tr>
+<tr>
+<td>tck.external-server</td>
+<td>&lt;<span style="font-style: italic;">none</span>&gt;</td>
+<td><span style="font-weight: bold;">run-test</span></td>
+<td>When this property is set with a value of run-test
+it&nbsp;instructs the Maven command to only run the test harness
+with an external server.<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn
+surefire-report:report
+-Dtck.external-server=run-test</span></td>
+</tr>
+<tr>
+<td>bridge.tck.test.file</td>
+<td>
+${bridge.tck.test.file.dir}/${bridge.tck.test.file.name}<br />
+</td>
+<td><br />
+</td>
+<td>When defined with the above, this property defines the
+location
+of the test description file (test.xml) that drives the set of
+tests the harness runs.<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn&nbsp;</span><span style="font-weight: bold;">surefire-report:report
+-Dtck.external-server=run-test
+-Dbridge.tck.test.file=</span>&nbsp;<span style="font-family: monospace; font-weight: bold;">c:\bridgeTCK\portlet-bridge-tck-client\test.xml</span></td>
+</tr>
+<tr>
+<td>bridge.tck.login-file</td>
+<td>&lt;<span style="font-style: italic;">none</span>&gt;<br />
+</td>
+<td><br />
+</td>
+<td>When used in conjunction with <span style="font-weight: bold;">-Dtck.external-server=run-test</span>,
+this
+property defines the location of the login.properties file that
+provides the information the harness needs to authenticate itself
+with the test server when challenged.<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn&nbsp;</span><span style="font-weight: bold;">surefire-report:report
+-Dtck.external-server=run-test
+-Dbridge.tck.test.file=</span>&nbsp;<span style="font-family: monospace; font-weight: bold;">c:\bridgeTCK\portlet-bridge-tck-client\login.properties</span></td>
+</tr>
+<tr>
+<td>bridge.tck.test.host</td>
+<td><span style="font-weight: bold;">localhost</span></td>
+<td></td>
+<td>This property defines the name of the host used to
+access the
+test portal server.<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn&nbsp;</span><tt><span style="font-weight: bold;">surefire-report:report
+-Dtck.external-server=run-test
+-Dbridge.tck.test.file=</span></tt><span style="font-family: monospace; font-weight: bold;">c:\bridgeTCK\portlet-bridge-tck-client\test.xml</span>
+<tt><span style="font-weight: bold;">-Dbridge.tck.test.host=bridge-testserver</span></tt></td>
+</tr>
+<tr>
+<td>bridge.tck.test.port</td>
+<td><span style="font-weight: bold;">8080</span></td>
+<td></td>
+<td>This property defines the port the test portal server
+host is
+lisenting on.<br />
+<br />
+Usage: <span style="font-weight: bold;">mvn&nbsp;</span><tt><span style="font-weight: bold;">surefire-report:report
+-Dtck.external-server=run-test
+-Dbridge.tck.test.file=</span></tt><span style="font-family: monospace; font-weight: bold;">c:\bridgeTCK\portlet-bridge-tck-client\test.xml</span>
+<tt><span style="font-weight: bold;">-Dbridge.tck.test.host=bridge-testserver
+-Dbridge.tck.test.port=80</span></tt></td>
+</tr>
+<tr>
+<td>bridge.tck.browser</td>
+<td><span style="font-weight: bold;">*firefox</span></td>
+<td>[<span style="font-weight: bold;">[*firefox</span>|<span style="font-weight: bold;">*iexplore</span>]</td>
+<td>Define this property to have Selenium (Test harness)
+run in a
+browser other than Mozilla Firefox.<br />
+<br />
+<span style="font-weight: bold;">mvn&nbsp;</span><span style="font-weight: bold;">surefire-report:report
+-Dtck.external-server=run-test
+-Dbridge.tck.test.file=</span>&nbsp;<span style="font-family: monospace; font-weight: bold;">c:\bridgeTCK\portlet-bridge-tck-client\test.xml
+-Bbridge.tck.browser=*iexplore</span></td>
+</tr>
+</tbody>
+</table>
+<br />
+[<a href="Portlet%201.0%20Bridge%20for%20JavaServer%20Faces%201.2%20TCK%20User%27s%20Guide.html#Table_of_Contents">return
+to TOC</a>]<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h2>Chapter 10</h2>
+<h1><a name="Debugging_Test_Problems" id="Debugging_Test_Problems"></a>Debugging Test
+Problems</h1>
+<hr style="width: 100%; height: 2px;" />
+<br />
+<br />
+<br />
+<br />
+If any of the tests should fail descriptive information describing
+the nature of the failure is output by the test and included in the
+generated report. &nbsp;If this description doesn't provide enough
+information to determine the cause of the failure, the bridge will
+need to be debugged. &nbsp;As the bridge is part of a portlet
+application, debugging occurs using exactly the same procedure used
+to debug a portlet application in the test server environment.
+&nbsp;As different test servers may have different procedures
+consult the documentation of yours for details.<br />
+<br />
+Often when tracking down an issue its helpful to isolate the tests
+run to only the test at issue. &nbsp;If using the TCK Test harness
+to execute the tests, you can accomplish this by commenting out or
+removing those tests in your test.xml file that you don't want to
+have run. &nbsp;Another, often easier, alternative is to merely to
+run the test manually by invoking the page containing the test at
+issue directly from your browser (and then clicking on any of the
+indicated buttons if provided).<br />
+<br />
+Because the primary function of the Bridge is to translate between
+the Portlet and JSF environments, one common cause for test
+failures is a bug either in the portlet container or the Faces
+implementation (more commonly the portlet container). &nbsp;If you
+isolate the issue to a source outside the bridge then to pass the
+TCK you will need to verify bridge correctness (for the failed
+tests) on a different platform. <br />
+<br />
+[<a href="Portlet%201.0%20Bridge%20for%20JavaServer%20Faces%201.2%20TCK%20User%27s%20Guide.html#Table_of_Contents">return
+to TOC</a>]<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h2>Appendix A</h2>
+<h1><a name="Frequently_Asked_Questions" id="Frequently_Asked_Questions"></a> Frequently Asked
+Questions</h1>
+<hr style="width: 100%; height: 2px;" />
+<br />
+<br />
+<br />
+Q: Where do I start to debug a test failure?<br />
+A: Check the detailed description concerning the failure contained
+in the test run report. If this doesn't provide enough infomration
+to resolve the problem you will need to attach a debugger to the
+server and inspect its behavior. See Chapter 10, &#8220;Debugging
+Test Problems&#8221; for more information.<br />
+<br />
+<br />
+Q: Where is the TCK's text exclusion list located?<br />
+A. &nbsp;It is in
+TCK_HOME/src/test/resources/test-exclusions.xml<br />
+<br />
+<br />
+Q: Why are there&nbsp;tests in the Excludes File?<br />
+A: &nbsp;The test exclusions file contains all tests that are not
+required to be run to certify your Bridge.&nbsp;In general excluded
+tests are those which were found for one reason or another not to
+operate correctly in certain specific environments due either to a
+JSF implementation dependency in the test or because it verifies
+behavior that the underlying portlet container isn't required to
+support.. &nbsp;Each test in the test exclusions file contains a
+comment detailing under what circumstance the test can and can't be
+run. &nbsp;If you are running in an environment which supports the
+test, you are strongly encouraged to manually run the test to
+ensure this portion of the bridge function is operating
+correctly.<br />
+<br />
+<br />
+Q: &nbsp;Should I run any tests that are in the Excludes
+File?<br />
+A: &nbsp;Each test in the test exclusions file contains a comment
+detailing under what circumstance the test can and can't be run.
+&nbsp;If you are running in an environment which supports the test,
+you are strongly encouraged to manually run the test to ensure this
+portion of the bridge function is operating correctly.<br />
+<br />
+<br />
+Q: All the TCK events tests fail in my environment when run via the
+test harness. &nbsp;Why?<br />
+A: &nbsp;As discussed in the chapter related to running the TCK in
+a Pluto environment, a consumer needs to render itself following
+dispatching events to its recipients. &nbsp;Some consumers will
+generate a (render) url that encodes the need to render every recipient
+regardless of whether that portlet is visible (on the current page).
+&nbsp;This can cause problems when the underlying servlet container
+and or web server limits the size of (received) urls. &nbsp;You may
+be running into the same issue. &nbsp;Try configuring each portlet
+separately, running the test manually, and then removing it from the
+portal to verify correctness.<br />
+<br />
+<br />
+Q: A test fails because of a portlet container bug. Should I
+challenge the test and request it be excluded?<br />
+A: &nbsp;No. &nbsp;Its likely the test is valid and hence you
+will
+need to verify your Bridge passes in a different environment.&nbsp;
+<br />
+<br />
+<br />
+Q: What does the basic&nbsp;<span style="font-weight: bold;">mvn
+install</span> command do?<br />
+A: &nbsp;The TCK has not only been built for external use to test
+(other) bridge implementations, but it is also used by the
+Reference Implementation to both verify its behavior and for
+regression testing. &nbsp;The simpliest/basic form of the Maven
+commands are oriented towards this purpose. &nbsp;The mvn install
+command will build the test wars, construct the appropriate server
+configuration files, &nbsp;and automatically launch a Jetty server
+containing Pluto and run the tests. &nbsp;As its anticipated bridge
+implementors will likely be targeting specific server environments,
+the details of using the built-in Jetty server haven't been
+provided in this documentation. &nbsp;If you would like more
+information on this, consult the projects .pom files.<br />
+<br />
+[<a href="Portlet%201.0%20Bridge%20for%20JavaServer%20Faces%201.2%20TCK%20User%27s%20Guide.html#Table_of_Contents">return
+to TOC</a>]<br />
+<br />
+</body></html>

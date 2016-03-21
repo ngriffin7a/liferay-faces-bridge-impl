@@ -1,17 +1,15 @@
 /**
  * Copyright (c) 2000-2016 Liferay, Inc. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 package com.liferay.faces.bridge.context.internal;
 
@@ -20,12 +18,13 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.portlet.PortalContext;
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 
 import com.liferay.faces.bridge.config.internal.PortletConfigParam;
-import com.liferay.faces.bridge.context.BridgeContext;
 import com.liferay.faces.bridge.context.BridgePortalContext;
 
 
@@ -142,12 +141,13 @@ public class BridgePortalContextImpl implements BridgePortalContext {
 			// implemented this feature. That way, the ResourceHandlerImpl will always deliver stuff like jsf.js back
 			// to the browser. As we support more portlet containers in the future (Pluto, etc.) we can create
 			// implementations that override this.
-			BridgeContext bridgeContext = BridgeContext.getCurrentInstance();
-			ableToSetHttpStatusCode = bridgeContext.getInitParameter(PortletConfigParam.ContainerAbleToSetHttpStatusCode
-					.getName());
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			ExternalContext externalContext = facesContext.getExternalContext();
+			ableToSetHttpStatusCode = externalContext.getInitParameter(
+					PortletConfigParam.ContainerAbleToSetHttpStatusCode.getName());
 
 			if (ableToSetHttpStatusCode == null) {
-				ableToSetHttpStatusCode = bridgeContext.getInitParameter(
+				ableToSetHttpStatusCode = externalContext.getInitParameter(
 						PortletConfigParam.ContainerAbleToSetHttpStatusCode.getAlternateName());
 			}
 		}

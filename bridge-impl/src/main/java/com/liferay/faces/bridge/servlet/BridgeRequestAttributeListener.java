@@ -1,23 +1,22 @@
 /**
  * Copyright (c) 2000-2016 Liferay, Inc. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 package com.liferay.faces.bridge.servlet;
 
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import javax.faces.context.FacesContext;
 import javax.portlet.faces.Bridge;
 import javax.portlet.faces.Bridge.PortletPhase;
 import javax.portlet.faces.annotation.BridgeRequestScopeAttributeAdded;
@@ -26,7 +25,7 @@ import javax.servlet.ServletRequestAttributeEvent;
 import javax.servlet.ServletRequestAttributeListener;
 
 import com.liferay.faces.bridge.config.BridgeConfig;
-import com.liferay.faces.bridge.context.BridgeContext;
+import com.liferay.faces.bridge.util.internal.RequestMapUtil;
 import com.liferay.faces.util.logging.Logger;
 import com.liferay.faces.util.logging.LoggerFactory;
 
@@ -42,7 +41,7 @@ import com.liferay.faces.util.logging.LoggerFactory;
  * </pre>
  * </code>
  *
- * @see     http://issues.liferay.com/browse/FACES-146
+ * @see     <a href="http://issues.liferay.com/browse/FACES-146">FACES-146</a>
  * @author  Neil Griffin
  */
 public class BridgeRequestAttributeListener implements ServletRequestAttributeListener {
@@ -54,6 +53,7 @@ public class BridgeRequestAttributeListener implements ServletRequestAttributeLi
 	 * This method is called after an attribute is added to the ServletRequest. Note that this should only get called
 	 * for remote WSRP portlets. For more info, see: http://issues.liferay.com/browse/FACES-146
 	 */
+	@Override
 	public void attributeAdded(ServletRequestAttributeEvent servletRequestAttributeEvent) {
 
 		// NOTE: We only care about phases prior to the RENDER_PHASE because we're concerned here about managed beans
@@ -70,8 +70,8 @@ public class BridgeRequestAttributeListener implements ServletRequestAttributeLi
 			// If the attribute being added is not excluded, then invoke all methods on the attribute value (class
 			// instance) that are annotated with the BridgeRequestScopeAttributeAdded annotation.
 			String attributeName = servletRequestAttributeEvent.getName();
-			BridgeContext bridgeContext = BridgeContext.getCurrentInstance();
-			BridgeConfig bridgeConfig = bridgeContext.getBridgeConfig();
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			BridgeConfig bridgeConfig = RequestMapUtil.getBridgeConfig(facesContext);
 			Set<String> excludedRequestScopeAttributes = bridgeConfig.getExcludedRequestAttributes();
 
 			if (!excludedRequestScopeAttributes.contains(attributeName)) {
@@ -91,7 +91,7 @@ public class BridgeRequestAttributeListener implements ServletRequestAttributeLi
 								if (method.isAnnotationPresent(BridgeRequestScopeAttributeAdded.class)) {
 
 									try {
-										method.invoke(attributeValue, new Object[] {});
+										method.invoke(attributeValue);
 									}
 									catch (Exception e) {
 										logger.error(e);
@@ -108,9 +108,11 @@ public class BridgeRequestAttributeListener implements ServletRequestAttributeLi
 	/**
 	 * This method is called after an attribute is removed from the ServletRequest. One might expect that this is a good
 	 * time to call any managed bean methods annotated with @BridgePreDestroy, but that actually takes place in the
-	 * Bridge's {@link RequestAttributeMap#remove(Object)} method. Note that this should only get called for remote WSRP
-	 * portlets. For more info, see: http://issues.liferay.com/browse/FACES-146
+	 * Bridge's {@link com.liferay.faces.bridge.context.map.internal.RequestScopeMap#remove(Object)} method. Note that
+	 * this should only get called for remote WSRP portlets. For more info, see:
+	 * http://issues.liferay.com/browse/FACES-146
 	 */
+	@Override
 	public void attributeRemoved(ServletRequestAttributeEvent servletRequestAttributeEvent) {
 		String attributeName = servletRequestAttributeEvent.getName();
 		Object attributeValue = servletRequestAttributeEvent.getValue();
@@ -120,9 +122,11 @@ public class BridgeRequestAttributeListener implements ServletRequestAttributeLi
 	/**
 	 * This method is called after an attribute is replaced in the ServletRequest. One might expect that this is a good
 	 * time to call any managed bean methods annotated with @BridgePreDestroy, but that actually takes place in the
-	 * Bridge's {@link RequestAttributeMap#remove(Object)} method. Note that this should only get called for remote WSRP
-	 * portlets. For more info, see: http://issues.liferay.com/browse/FACES-146
+	 * Bridge's {@link com.liferay.faces.bridge.context.map.internal.RequestScopeMap#remove(Object)} method. Note that
+	 * this should only get called for remote WSRP portlets. For more info, see:
+	 * http://issues.liferay.com/browse/FACES-146
 	 */
+	@Override
 	public void attributeReplaced(ServletRequestAttributeEvent servletRequestAttributeEvent) {
 		String attributeName = servletRequestAttributeEvent.getName();
 		Object attributeValue = servletRequestAttributeEvent.getValue();

@@ -1,17 +1,15 @@
 /**
  * Copyright (c) 2000-2016 Liferay, Inc. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 package com.liferay.faces.bridge.context.map.internal;
 
@@ -23,13 +21,12 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.portlet.ClientDataRequest;
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
+import javax.portlet.PortletSession;
 import javax.servlet.ServletContext;
-import javax.servlet.http.Cookie;
 
-import com.liferay.faces.bridge.context.BridgeContext;
 import com.liferay.faces.bridge.context.ContextMapFactory;
 import com.liferay.faces.bridge.model.UploadedFile;
 import com.liferay.faces.bridge.model.internal.UploadedFileBridgeImpl;
@@ -51,19 +48,16 @@ public class ContextMapFactoryImpl extends ContextMapFactory {
 	private static final String MULTIPART_FORM_DATA_FQCN = MultiPartFormData.class.getName();
 
 	@Override
-	public Map<String, Object> getApplicationScopeMap(BridgeContext bridgeContext) {
-		return new ApplicationScopeMap(bridgeContext);
+	public Map<String, Object> getApplicationScopeMap(PortletContext portletContext, boolean preferPredestroy) {
+		return new ApplicationScopeMap(portletContext, preferPredestroy);
 	}
 
-	protected FacesRequestParameterMap getFacesRequestParameterMap(BridgeContext bridgeContext) {
+	protected FacesRequestParameterMap getFacesRequestParameterMap(PortletRequest portletRequest,
+		String responseNamespace, PortletConfig portletConfig, BridgeRequestScope bridgeRequestScope,
+		String defaultRenderKitId, String facesViewQueryString) {
 
 		FacesRequestParameterMap facesRequestParameterMap = null;
-		PortletRequest portletRequest = bridgeContext.getPortletRequest();
-		PortletResponse portletResponse = bridgeContext.getPortletResponse();
-		String namespace = portletResponse.getNamespace();
-		BridgeRequestScope bridgeRequestScope = bridgeContext.getBridgeRequestScope();
-		String defaultRenderKitId = bridgeContext.getDefaultRenderKitId();
-		Map<String, String> facesViewParameterMap = getFacesViewParameterMap(bridgeContext);
+		Map<String, String> facesViewParameterMap = getFacesViewParameterMap(facesViewQueryString);
 
 		if (portletRequest instanceof ClientDataRequest) {
 
@@ -77,13 +71,12 @@ public class ContextMapFactoryImpl extends ContextMapFactory {
 						MULTIPART_FORM_DATA_FQCN);
 
 				if (multiPartFormData == null) {
-					facesRequestParameterMap = new FacesRequestParameterMapImpl(namespace, bridgeRequestScope,
+					facesRequestParameterMap = new FacesRequestParameterMapImpl(responseNamespace, bridgeRequestScope,
 							facesViewParameterMap, defaultRenderKitId);
 
 					MultiPartFormDataProcessor multiPartFormDataProcessor = new MultiPartFormDataProcessorImpl();
 					Map<String, List<com.liferay.faces.util.model.UploadedFile>> uploadedFileMap =
-						multiPartFormDataProcessor.process(clientDataRequest, bridgeContext.getPortletConfig(),
-							facesRequestParameterMap);
+						multiPartFormDataProcessor.process(clientDataRequest, portletConfig, facesRequestParameterMap);
 
 					multiPartFormData = new MultiPartFormDataImpl(facesRequestParameterMap, uploadedFileMap);
 
@@ -99,18 +92,15 @@ public class ContextMapFactoryImpl extends ContextMapFactory {
 
 		if (facesRequestParameterMap == null) {
 			Map<String, String[]> parameterMap = portletRequest.getParameterMap();
-			facesRequestParameterMap = new FacesRequestParameterMapImpl(parameterMap, namespace, bridgeRequestScope,
-					facesViewParameterMap, defaultRenderKitId);
+			facesRequestParameterMap = new FacesRequestParameterMapImpl(parameterMap, responseNamespace,
+					bridgeRequestScope, facesViewParameterMap, defaultRenderKitId);
 		}
 
 		return facesRequestParameterMap;
 	}
 
 	@Override
-	public Map<String, String> getFacesViewParameterMap(BridgeContext bridgeContext) {
-
-		String facesViewQueryString = bridgeContext.getFacesViewQueryString();
-
+	public Map<String, String> getFacesViewParameterMap(String facesViewQueryString) {
 		return new FacesViewParameterMap(facesViewQueryString);
 	}
 
@@ -120,42 +110,46 @@ public class ContextMapFactoryImpl extends ContextMapFactory {
 	}
 
 	@Override
-	public Map<String, Object> getRequestCookieMap(BridgeContext bridgeContext) {
-		PortletRequest portletRequest = bridgeContext.getPortletRequest();
-		Cookie[] cookies = portletRequest.getCookies();
-
-		return new RequestCookieMap(cookies);
+	public Map<String, Object> getRequestCookieMap(PortletRequest portletRequest) {
+		return new RequestCookieMap(portletRequest.getCookies());
 	}
 
 	@Override
-	public Map<String, String> getRequestHeaderMap(BridgeContext bridgeContext) {
-		return new RequestHeaderMap(getRequestHeaderValuesMap(bridgeContext));
+	public Map<String, String> getRequestHeaderMap(PortletRequest portletRequest) {
+		return new RequestHeaderMap(getRequestHeaderValuesMap(portletRequest));
 	}
 
 	@Override
-	public Map<String, String[]> getRequestHeaderValuesMap(BridgeContext bridgeContext) {
-		return new RequestHeaderValuesMap(bridgeContext);
+	public Map<String, String[]> getRequestHeaderValuesMap(PortletRequest portletRequest) {
+		return new RequestHeaderValuesMap(portletRequest);
 	}
 
 	@Override
-	public Map<String, String> getRequestParameterMap(BridgeContext bridgeContext) {
+	public Map<String, String> getRequestParameterMap(PortletRequest portletRequest, String responseNamespace,
+		PortletConfig portletConfig, BridgeRequestScope bridgeRequestScope, String defaultRenderKitId,
+		String facesViewQueryString) {
 
-		FacesRequestParameterMap facesRequestParameterMap = getFacesRequestParameterMap(bridgeContext);
+		FacesRequestParameterMap facesRequestParameterMap = getFacesRequestParameterMap(portletRequest,
+				responseNamespace, portletConfig, bridgeRequestScope, defaultRenderKitId, facesViewQueryString);
 
 		return new RequestParameterMap(facesRequestParameterMap);
 	}
 
 	@Override
-	public Map<String, String[]> getRequestParameterValuesMap(BridgeContext bridgeContext) {
+	public Map<String, String[]> getRequestParameterValuesMap(PortletRequest portletRequest, String responseNamespace,
+		PortletConfig portletConfig, BridgeRequestScope bridgeRequestScope, String defaultRenderKitId,
+		String facesViewQueryString) {
 
-		FacesRequestParameterMap facesRequestParameterMap = getFacesRequestParameterMap(bridgeContext);
+		FacesRequestParameterMap facesRequestParameterMap = getFacesRequestParameterMap(portletRequest,
+				responseNamespace, portletConfig, bridgeRequestScope, defaultRenderKitId, facesViewQueryString);
 
 		return new RequestParameterValuesMap(facesRequestParameterMap);
 	}
 
 	@Override
-	public Map<String, Object> getRequestScopeMap(BridgeContext bridgeContext) {
-		return new RequestScopeMap(bridgeContext);
+	public Map<String, Object> getRequestScopeMap(PortletContext portletContext, PortletRequest portletRequest,
+		Set<String> removedAttributeNames, boolean preferPreDestroy) {
+		return new RequestScopeMap(portletContext, portletRequest, removedAttributeNames, preferPreDestroy);
 	}
 
 	@Override
@@ -164,15 +158,15 @@ public class ContextMapFactoryImpl extends ContextMapFactory {
 	}
 
 	@Override
-	public Map<String, Object> getSessionScopeMap(BridgeContext bridgeContext, int scope) {
-		return new SessionScopeMap(bridgeContext, scope);
+	public Map<String, Object> getSessionScopeMap(PortletContext portletContext, PortletSession portletSession,
+		int scope, boolean preferPreDestroy) {
+		return new SessionScopeMap(portletContext, portletSession, scope, preferPreDestroy);
 	}
 
 	@Override
-	public Map<String, List<UploadedFile>> getUploadedFileMap(BridgeContext bridgeContext) {
+	public Map<String, List<UploadedFile>> getUploadedFileMap(PortletRequest portletRequest) {
 
 		Map<String, List<UploadedFile>> bridgeUploadedFileMap = null;
-		PortletRequest portletRequest = bridgeContext.getPortletRequest();
 		MultiPartFormData multiPartFormData = (MultiPartFormData) portletRequest.getAttribute(MULTIPART_FORM_DATA_FQCN);
 
 		if (multiPartFormData != null) {

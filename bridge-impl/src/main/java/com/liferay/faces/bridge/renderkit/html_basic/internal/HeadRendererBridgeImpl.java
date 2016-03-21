@@ -1,26 +1,25 @@
 /**
  * Copyright (c) 2000-2016 Liferay, Inc. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 package com.liferay.faces.bridge.renderkit.html_basic.internal;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.liferay.faces.bridge.component.internal.ComponentUtil;
+import com.liferay.faces.bridge.context.BridgePortalContext;
+import com.liferay.faces.bridge.context.HeadResponseWriter;
+import com.liferay.faces.bridge.context.HeadResponseWriterFactory;
+import com.liferay.faces.util.application.ResourceUtil;
+import com.liferay.faces.util.logging.Logger;
+import com.liferay.faces.util.logging.LoggerFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
@@ -30,17 +29,15 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 import javax.portlet.PortalContext;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.faces.BridgeFactoryFinder;
 import javax.portlet.faces.component.PortletNamingContainerUIViewRoot;
-
-import com.liferay.faces.bridge.component.internal.ComponentUtil;
-import com.liferay.faces.bridge.context.BridgeContext;
-import com.liferay.faces.bridge.context.BridgePortalContext;
-import com.liferay.faces.bridge.context.HeadResponseWriter;
-import com.liferay.faces.bridge.context.HeadResponseWriterFactory;
-import com.liferay.faces.util.application.ResourceUtil;
-import com.liferay.faces.util.logging.Logger;
-import com.liferay.faces.util.logging.LoggerFactory;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -140,7 +137,6 @@ public class HeadRendererBridgeImpl extends Renderer {
 		List<UIComponent> resourcesForRelocatingToBody = new ArrayList<UIComponent>();
 		ExternalContext externalContext = facesContext.getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) externalContext.getRequest();
-		BridgeContext bridgeContext = BridgeContext.getCurrentInstance();
 
 		// Determine whether or not the portlet container is able to add script resources to the head.
 		PortalContext portalContext = portletRequest.getPortalContext();
@@ -151,7 +147,7 @@ public class HeadRendererBridgeImpl extends Renderer {
 		// Determine whether or not this might be a Liferay runtime portlet (which does not have the ability to add
 		// script resources to the head).
 		Boolean renderPortletResource = (Boolean) portletRequest.getAttribute("RENDER_PORTLET_RESOURCE");
-		boolean liferayRuntimePortlet = (renderPortletResource != null) && renderPortletResource.booleanValue();
+		boolean liferayRuntimePortlet = (renderPortletResource != null) && renderPortletResource;
 
 		// Note: The HeadManagedBean is a ViewScoped manage-bean that keeps a list of resources that have been added to
 		// the <head> section of the portal page. Note that the HeadManagedBean will be null in a JSP context since
@@ -241,8 +237,9 @@ public class HeadRendererBridgeImpl extends Renderer {
 			if (headResponseWriter == null) {
 				HeadResponseWriterFactory headResponseWriterFactory = (HeadResponseWriterFactory) BridgeFactoryFinder
 					.getFactory(HeadResponseWriterFactory.class);
-				headResponseWriter = headResponseWriterFactory.getHeadResponseWriter(bridgeContext,
-						responseWriterBackup);
+				PortletResponse portletResponse = (PortletResponse) externalContext.getResponse();
+				headResponseWriter = headResponseWriterFactory.getHeadResponseWriter(responseWriterBackup,
+						portletResponse);
 			}
 
 			portletRequest.setAttribute(HeadResponseWriter.class.getName(), headResponseWriter);

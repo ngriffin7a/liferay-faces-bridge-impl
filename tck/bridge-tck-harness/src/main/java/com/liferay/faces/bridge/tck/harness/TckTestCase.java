@@ -443,7 +443,7 @@ outer:
 					sSelenium.click(action);
 
 					try {
-						Thread.sleep(1000l);
+						Thread.sleep(500l);
 					}
 					catch (InterruptedException e) {
 						e.printStackTrace();

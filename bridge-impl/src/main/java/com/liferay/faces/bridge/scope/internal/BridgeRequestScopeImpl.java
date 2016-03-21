@@ -1,17 +1,15 @@
 /**
  * Copyright (c) 2000-2016 Liferay, Inc. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 package com.liferay.faces.bridge.scope.internal;
 
@@ -26,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIViewRoot;
@@ -44,9 +41,10 @@ import javax.portlet.RenderRequest;
 import javax.portlet.faces.Bridge;
 import javax.portlet.faces.Bridge.PortletPhase;
 import javax.portlet.faces.BridgeFactoryFinder;
+import javax.portlet.faces.BridgeUtil;
 
 import com.liferay.faces.bridge.config.BridgeConfig;
-import com.liferay.faces.bridge.context.BridgeContext;
+import com.liferay.faces.bridge.config.internal.PortletConfigParam;
 import com.liferay.faces.bridge.context.IncongruityContext;
 import com.liferay.faces.bridge.scope.RequestAttributeInspector;
 import com.liferay.faces.bridge.scope.RequestAttributeInspectorFactory;
@@ -88,11 +86,10 @@ public class BridgeRequestScopeImpl extends BridgeRequestScopeCompat_2_2_Impl im
 	private boolean facesLifecycleExecuted;
 	private String idPrefix;
 	private String idSuffix;
-	private Map<String, Object> managedBeanMap;
 	private boolean navigationOccurred;
 	private PortletMode portletMode;
-	private String portletName;
 	private boolean portletModeChanged;
+	private boolean preserveActionParams;
 	private boolean redirect;
 	private Set<String> removedAttributeNames;
 	private RequestAttributeInspector requestAttributeInspector;
@@ -103,17 +100,14 @@ public class BridgeRequestScopeImpl extends BridgeRequestScopeCompat_2_2_Impl im
 		Calendar calendar = new GregorianCalendar();
 		this.dateCreated = calendar.getTimeInMillis();
 
-		portletName = portletConfig.getPortletName();
-
+		String portletName = portletConfig.getPortletName();
 		PortletSession portletSession = portletRequest.getPortletSession();
 		String sessionId = portletSession.getId();
 		this.idPrefix = portletName + ":::" + sessionId + ":::";
 		this.idSuffix = Long.toString(this.dateCreated);
-
 		this.portletMode = PortletMode.VIEW;
-
 		this.beganInPhase = (Bridge.PortletPhase) portletRequest.getAttribute(Bridge.PORTLET_LIFECYCLE_PHASE);
-
+		this.preserveActionParams = PortletConfigParam.PreserveActionParams.getBooleanValue(portletConfig);
 		this.removedAttributeNames = new HashSet<String>();
 
 		BridgeFactoryFinder bridgeFactoryFinder = BridgeFactoryFinder.getInstance();
@@ -123,10 +117,8 @@ public class BridgeRequestScopeImpl extends BridgeRequestScopeCompat_2_2_Impl im
 				portletConfig, bridgeConfig);
 	}
 
-	/**
-	 * The overrides for {@link #toString()} and {@link #hashCode()} are necessary because the {@link ConcurrentHashMap}
-	 * parent class overrides them and causes debug logs to be difficult to interpret.
-	 */
+	// The overrides for {@link #toString()} and {@link #hashCode()} are necessary because the {@link ConcurrentHashMap}
+	// parent class overrides them and causes debug logs to be difficult to interpret.
 	@Override
 	public int hashCode() {
 		return System.identityHashCode(this);
@@ -137,6 +129,7 @@ public class BridgeRequestScopeImpl extends BridgeRequestScopeCompat_2_2_Impl im
 	 * into the {@link RenderRequest}. However, the Bridge Spec assumes that they will not be preserved. Therefore is
 	 * necessary to remove these request attributes when running under Liferay.
 	 */
+	@Override
 	public void removeExcludedAttributes(RenderRequest renderRequest) {
 
 		if (isRedirectOccurred() || isPortletModeChanged()) {
@@ -214,6 +207,7 @@ public class BridgeRequestScopeImpl extends BridgeRequestScopeCompat_2_2_Impl im
 		}
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void restoreState(FacesContext facesContext) {
 
@@ -223,13 +217,14 @@ public class BridgeRequestScopeImpl extends BridgeRequestScopeCompat_2_2_Impl im
 				(beganInPhase == Bridge.PortletPhase.EVENT_PHASE) ||
 				(beganInPhase == Bridge.PortletPhase.RESOURCE_PHASE));
 
-		BridgeContext bridgeContext = BridgeContext.getCurrentInstance();
-
-		PortletPhase portletRequestPhase = bridgeContext.getPortletRequestPhase();
+		PortletPhase portletRequestPhase = BridgeUtil.getPortletRequestPhase(facesContext);
 
 		if (portletRequestPhase == Bridge.PortletPhase.RENDER_PHASE) {
 
-			if (!portletMode.equals(bridgeContext.getPortletRequest().getPortletMode())) {
+			ExternalContext externalContext = facesContext.getExternalContext();
+			PortletRequest portletRequest = (PortletRequest) externalContext.getRequest();
+
+			if (!portletMode.equals(portletRequest.getPortletMode())) {
 				setPortletModeChanged(true);
 				restoreNonExcludedRequestAttributes = false;
 			}
@@ -334,7 +329,9 @@ public class BridgeRequestScopeImpl extends BridgeRequestScopeCompat_2_2_Impl im
 
 			if (savedIncongruityAttributes != null) {
 
-				IncongruityContext incongruityContext = bridgeContext.getIncongruityContext();
+				ExternalContext externalContext = facesContext.getExternalContext();
+				IncongruityContext incongruityContext = (IncongruityContext) externalContext.getRequestMap().get(
+						IncongruityContext.class.getName());
 				Map<String, Object> incongruityContextAttributes = incongruityContext.getAttributes();
 
 				for (IncongruityAttribute incongruityAttribute : savedIncongruityAttributes) {
@@ -352,12 +349,12 @@ public class BridgeRequestScopeImpl extends BridgeRequestScopeCompat_2_2_Impl im
 	 *
 	 * @param  facesContext  The current faces context.
 	 */
+	@Override
 	public void saveState(FacesContext facesContext) {
 
 		logger.debug("saveState(facesContext)");
 
 		// Get the ExternalContext and PortletResponse.
-		BridgeContext bridgeContext = BridgeContext.getCurrentInstance();
 		ExternalContext externalContext = facesContext.getExternalContext();
 		PortletResponse portletResponse = (PortletResponse) facesContext.getExternalContext().getResponse();
 
@@ -385,7 +382,7 @@ public class BridgeRequestScopeImpl extends BridgeRequestScopeCompat_2_2_Impl im
 			}
 
 			// If specified in the WEB-INF/portlet.xml descriptor, then preserve the action parameters.
-			if (bridgeContext.isPreserveActionParams()) {
+			if (preserveActionParams) {
 				Map<String, String> actionRequestParameterMap = new HashMap<String, String>(
 						externalContext.getRequestParameterMap());
 				actionRequestParameterMap.remove(ResponseStateManager.VIEW_STATE_PARAM);
@@ -445,44 +442,39 @@ public class BridgeRequestScopeImpl extends BridgeRequestScopeCompat_2_2_Impl im
 			if (currentRequestAttributes != null) {
 				List<RequestAttribute> savedRequestAttributes = new ArrayList<RequestAttribute>();
 				List<String> nonExcludedAttributeNames = new ArrayList<String>();
-				Iterator<Map.Entry<String, Object>> itr = currentRequestAttributes.entrySet().iterator();
 
-				if (itr != null) {
+				for (Map.Entry<String, Object> mapEntry : currentRequestAttributes.entrySet()) {
+					String attributeName = mapEntry.getKey();
+					Object attributeValue = mapEntry.getValue();
 
-					while (itr.hasNext()) {
-						Map.Entry<String, Object> mapEntry = itr.next();
-						String attributeName = mapEntry.getKey();
-						Object attributeValue = mapEntry.getValue();
+					if (requestAttributeInspector.isExcludedByConfig(attributeName, attributeValue) ||
+							requestAttributeInspector.isExcludedByAnnotation(attributeName, attributeValue) ||
+							requestAttributeInspector.containsExcludedNamespace(attributeName) ||
+							requestAttributeInspector.isExcludedByType(attributeName, attributeValue) ||
+							requestAttributeInspector.isExcludedByPreExisting(attributeName, attributeValue)) {
 
-						if (requestAttributeInspector.isExcludedByConfig(attributeName, attributeValue) ||
-								requestAttributeInspector.isExcludedByAnnotation(attributeName, attributeValue) ||
-								requestAttributeInspector.containsExcludedNamespace(attributeName) ||
-								requestAttributeInspector.isExcludedByType(attributeName, attributeValue) ||
-								requestAttributeInspector.isExcludedByPreExisting(attributeName, attributeValue)) {
-
-							logger.trace("NOT saving EXCLUDED attribute name=[{0}]", attributeName);
-						}
-						else {
-
-							if (saveNonExcludedAttributes) {
-								logger.trace("SAVING non-excluded request attribute name=[{0}] value=[{1}]",
-									attributeName, attributeValue);
-								savedRequestAttributes.add(new RequestAttribute(attributeName, attributeValue));
-							}
-
-							nonExcludedAttributeNames.add(attributeName);
-						}
-					}
-
-					if (savedRequestAttributes.size() > 0) {
-						setAttribute(BRIDGE_REQ_SCOPE_ATTR_REQUEST_ATTRIBUTES, savedRequestAttributes);
+						logger.trace("NOT saving EXCLUDED attribute name=[{0}]", attributeName);
 					}
 					else {
-						logger.trace("Not saving any non-excluded request attributes");
-					}
 
-					setAttribute(BRIDGE_REQ_SCOPE_NON_EXCLUDED_ATTR_NAMES, nonExcludedAttributeNames);
+						if (saveNonExcludedAttributes) {
+							logger.trace("SAVING non-excluded request attribute name=[{0}] value=[{1}]", attributeName,
+								attributeValue);
+							savedRequestAttributes.add(new RequestAttribute(attributeName, attributeValue));
+						}
+
+						nonExcludedAttributeNames.add(attributeName);
+					}
 				}
+
+				if (savedRequestAttributes.size() > 0) {
+					setAttribute(BRIDGE_REQ_SCOPE_ATTR_REQUEST_ATTRIBUTES, savedRequestAttributes);
+				}
+				else {
+					logger.trace("Not saving any non-excluded request attributes");
+				}
+
+				setAttribute(BRIDGE_REQ_SCOPE_NON_EXCLUDED_ATTR_NAMES, nonExcludedAttributeNames);
 			}
 			else {
 				logger.trace("Not saving any non-excluded request attributes because there are no request attributes!");
@@ -491,7 +483,7 @@ public class BridgeRequestScopeImpl extends BridgeRequestScopeCompat_2_2_Impl im
 
 		// If running in the ACTION_PHASE or EVENT_PHASE, then the Flash scope must be saved as well so that it can be
 		// restored.
-		Bridge.PortletPhase portletRequestPhase = bridgeContext.getPortletRequestPhase();
+		Bridge.PortletPhase portletRequestPhase = BridgeUtil.getPortletRequestPhase(facesContext);
 
 		if ((portletRequestPhase == Bridge.PortletPhase.ACTION_PHASE) ||
 				(portletRequestPhase == Bridge.PortletPhase.EVENT_PHASE)) {
@@ -509,14 +501,13 @@ public class BridgeRequestScopeImpl extends BridgeRequestScopeCompat_2_2_Impl im
 		if ((portletRequestPhase == Bridge.PortletPhase.ACTION_PHASE) ||
 				(portletRequestPhase == Bridge.PortletPhase.EVENT_PHASE)) {
 
-			IncongruityContext incongruityContext = bridgeContext.getIncongruityContext();
+			IncongruityContext incongruityContext = (IncongruityContext) externalContext.getRequestMap().get(
+					IncongruityContext.class.getName());
 			Map<String, Object> incongruityAttributeMap = incongruityContext.getAttributes();
 			int mapSize = incongruityAttributeMap.size();
 			List<IncongruityAttribute> savedIncongruityAttributes = new ArrayList<IncongruityAttribute>(mapSize);
-			Iterator<Map.Entry<String, Object>> itr = incongruityAttributeMap.entrySet().iterator();
 
-			while (itr.hasNext()) {
-				Map.Entry<String, Object> mapEntry = itr.next();
+			for (Map.Entry<String, Object> mapEntry : incongruityAttributeMap.entrySet()) {
 				String name = mapEntry.getKey();
 				Object value = mapEntry.getValue();
 				logger.trace("Saving IncongruityContext attribute name=[{0}] value=[{1}]", name, value);
@@ -527,90 +518,90 @@ public class BridgeRequestScopeImpl extends BridgeRequestScopeCompat_2_2_Impl im
 		}
 	}
 
-	/**
-	 * The overrides for {@link #toString()} and {@link #hashCode()} are necessary because the {@link ConcurrentHashMap}
-	 * parent class overrides them and causes debug logs to be difficult to interpret.
-	 */
+	// The overrides for {@link #toString()} and {@link #hashCode()} are necessary because the {@link ConcurrentHashMap}
+	// parent class overrides them and causes debug logs to be difficult to interpret.
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder();
-		buf.append(getClass().getName());
-		buf.append("@");
-		buf.append(Integer.toHexString(hashCode()));
-
-		return buf.toString();
+		return getClass().getName().concat("@").concat(Integer.toHexString(hashCode()));
 	}
 
+	@Override
 	public Bridge.PortletPhase getBeganInPhase() {
 		return beganInPhase;
 	}
 
+	@Override
 	public boolean isFacesLifecycleExecuted() {
 		return facesLifecycleExecuted;
 	}
 
+	@Override
 	public boolean isNavigationOccurred() {
 		return navigationOccurred;
 	}
 
+	@Override
 	public boolean isPortletModeChanged() {
 		return portletModeChanged;
 	}
 
+	@Override
 	public boolean isRedirectOccurred() {
 		return redirect;
 	}
 
+	@Override
 	public long getDateCreated() {
 		return dateCreated;
 	}
 
+	@Override
 	public void setFacesLifecycleExecuted(boolean facesLifecycleExecuted) {
 		this.facesLifecycleExecuted = facesLifecycleExecuted;
 	}
 
+	@Override
 	public String getId() {
 		return idPrefix + idSuffix;
 	}
 
+	@Override
 	public void setIdPrefix(String idPrefix) {
 		this.idPrefix = idPrefix;
 	}
 
-	public Map<String, Object> getManagedBeanMap() {
-
-		if (managedBeanMap == null) {
-			managedBeanMap = new HashMap<String, Object>();
-		}
-
-		return managedBeanMap;
-	}
-
+	@Override
 	public void setNavigationOccurred(boolean navigationOccurred) {
 		this.navigationOccurred = navigationOccurred;
 	}
 
+	@Override
 	public PortletMode getPortletMode() {
 		return portletMode;
 	}
 
+	@Override
 	public void setPortletMode(PortletMode portletMode) {
 		this.portletMode = portletMode;
 	}
 
+	@Override
 	public void setPortletModeChanged(boolean portletModeChanged) {
 		this.portletModeChanged = portletModeChanged;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Map<String, String> getPreservedActionParameterMap() {
 		return (Map<String, String>) getAttribute(BRIDGE_REQ_SCOPE_ATTR_ACTION_PARAMS);
 	}
 
+	@Override
 	public String getPreservedViewStateParam() {
 		return (String) getAttribute(ResponseStateManager.VIEW_STATE_PARAM);
 	}
 
+	@Override
 	public void setRedirectOccurred(boolean redirect) {
 		this.redirect = redirect;
 	}

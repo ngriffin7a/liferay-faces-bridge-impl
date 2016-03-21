@@ -1,17 +1,15 @@
 /**
  * Copyright (c) 2000-2016 Liferay, Inc. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 package com.liferay.faces.bridge.event.internal;
 
@@ -28,10 +26,10 @@ import javax.faces.event.PhaseListener;
 import javax.portlet.faces.Bridge;
 import javax.portlet.faces.Bridge.PortletPhase;
 import javax.portlet.faces.BridgeFactoryFinder;
+import javax.portlet.faces.BridgeUtil;
 
 import com.liferay.faces.bridge.bean.internal.BeanManager;
 import com.liferay.faces.bridge.bean.internal.BeanManagerFactory;
-import com.liferay.faces.bridge.context.BridgeContext;
 import com.liferay.faces.util.config.ApplicationConfig;
 
 
@@ -57,12 +55,13 @@ public class ManagedBeanScopePhaseListener implements PhaseListener {
 	// serialVersionUID
 	private static final long serialVersionUID = 1713704308484763548L;
 
+	@Override
 	public void afterPhase(PhaseEvent phaseEvent) {
 
 		if (phaseEvent.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 
-			BridgeContext bridgeContext = BridgeContext.getCurrentInstance();
-			PortletPhase portletRequestPhase = bridgeContext.getPortletRequestPhase();
+			FacesContext facesContext = phaseEvent.getFacesContext();
+			PortletPhase portletRequestPhase = BridgeUtil.getPortletRequestPhase(facesContext);
 
 			if ((portletRequestPhase == Bridge.PortletPhase.RENDER_PHASE) ||
 					(portletRequestPhase == Bridge.PortletPhase.RESOURCE_PHASE)) {
@@ -73,30 +72,25 @@ public class ManagedBeanScopePhaseListener implements PhaseListener {
 				// bridge {@link RequestAttributeMap.remove(Object)} method will ensure that any @PreDestroy method(s)
 				// are called. The JavaDocs also state that this should only be the case for objects that are actually
 				// managed-beans.
-				FacesContext facesContext = FacesContext.getCurrentInstance();
 				ExternalContext externalContext = facesContext.getExternalContext();
 				Map<String, Object> requestScope = externalContext.getRequestMap();
 				List<String> managedBeanKeysToRemove = new ArrayList<String>();
 				Set<Map.Entry<String, Object>> mapEntries = requestScope.entrySet();
+				String appConfigAttrName = ApplicationConfig.class.getName();
+				Map<String, Object> applicationMap = externalContext.getApplicationMap();
+				ApplicationConfig applicationConfig = (ApplicationConfig) applicationMap.get(appConfigAttrName);
+				BeanManagerFactory beanManagerFactory = (BeanManagerFactory) BridgeFactoryFinder.getFactory(
+						BeanManagerFactory.class);
+				BeanManager beanManager = beanManagerFactory.getBeanManager(applicationConfig.getFacesConfig());
 
-				if (mapEntries != null) {
+				for (Map.Entry<String, Object> mapEntry : mapEntries) {
+					String potentialManagedBeanName = mapEntry.getKey();
+					Object potentialManagedBeanValue = mapEntry.getValue();
 
-					String appConfigAttrName = ApplicationConfig.class.getName();
-					Map<String, Object> applicationMap = externalContext.getApplicationMap();
-					ApplicationConfig applicationConfig = (ApplicationConfig) applicationMap.get(appConfigAttrName);
-					BeanManagerFactory beanManagerFactory = (BeanManagerFactory) BridgeFactoryFinder.getFactory(
-							BeanManagerFactory.class);
-					BeanManager beanManager = beanManagerFactory.getBeanManager(applicationConfig.getFacesConfig());
-
-					for (Map.Entry<String, Object> mapEntry : mapEntries) {
-						String potentialManagedBeanName = mapEntry.getKey();
-						Object potentialManagedBeanValue = mapEntry.getValue();
-
-						// Note that the request attribute name will not have a namespace prefix, so it is fine to
-						// simply pass the attribute name.
-						if (beanManager.isManagedBean(potentialManagedBeanName, potentialManagedBeanValue)) {
-							managedBeanKeysToRemove.add(potentialManagedBeanName);
-						}
+					// Note that the request attribute name will not have a namespace prefix, so it is fine to
+					// simply pass the attribute name.
+					if (beanManager.isManagedBean(potentialManagedBeanName, potentialManagedBeanValue)) {
+						managedBeanKeysToRemove.add(potentialManagedBeanName);
 					}
 				}
 
@@ -107,10 +101,12 @@ public class ManagedBeanScopePhaseListener implements PhaseListener {
 		}
 	}
 
+	@Override
 	public void beforePhase(PhaseEvent phaseEvent) {
 		// This method is required by the PhaseListener interface but is not used.
 	}
 
+	@Override
 	public PhaseId getPhaseId() {
 		return PhaseId.RENDER_RESPONSE;
 	}
